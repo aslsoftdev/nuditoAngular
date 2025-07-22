@@ -47,6 +47,14 @@ const routes: Routes = [
           import('./pages/usuarios/usuarios.component').then(m => m.UsuariosComponent)
       },
       {
+        path: 'lista-rutas',
+        loadComponent: () => import('./pages/lista-rutas/listarutas.component').then(m => m.ListarutasComponent)
+      },
+      {
+        path: 'solicitudes-facturas',
+        loadComponent: () => import('./pages/solicitudes-facturas/solicitudes-facturas.component').then(m => m.SolicitudesFacturasComponent)
+      },
+      {
         path: 'usuarios/nuevo',
         loadComponent: () =>
           import('./pages/usuarios/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent)

@@ -50,7 +50,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'usuarios',
-        title: 'Usuarios',
+        title: 'Vendedores',
         type: 'item',
         classes: 'nav-item',
         url: '/usuarios',
@@ -59,14 +59,25 @@ export const NavigationItems: NavigationItem[] = [
       },
      
       {
-        id: 'categorias-productos',
-        title: 'Cat. de Productos',
+        id: 'app-listas-rutas',
+        title: 'Lista de Rutas',
         type: 'item',
         classes: 'nav-item',
-        url: '/categorias-productos',
-        icon: 'ti ti-tags',
+        url: '/lista-rutas',
+        icon: 'ti ti-map',
         breadcrumbs: false
       },
+
+      {
+        id: 'app-solicitudes-facturas',
+        title: 'Solicitudes de Facturas',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/solicitudes-facturas',
+        icon: 'ti ti-file-invoice',
+        breadcrumbs: false
+      },
+
       {
         id: 'productos',
         title: 'Productos',

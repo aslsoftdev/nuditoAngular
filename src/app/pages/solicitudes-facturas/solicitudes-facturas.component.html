@@ -14,17 +14,6 @@
           <!-- Switch Activos / Archivados -->
           <div class="col-md-4">
             <div class="form-check form-switch ms-1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="switchSoloActivos"
-                [(ngModel)]="soloActivos"
-                (change)="obtenerVendedores()" />
-              <label class="form-check-label" for="switchSoloActivos">
-                {{ soloActivos
-                   ? 'Mostrar solo usuarios activos'
-                   : 'Mostrar activos y archivados' }}
-              </label>
             </div>
           </div>
 
@@ -57,38 +46,44 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Ubicación almacén</th>
-                <th>Diario</th>
+                <th>Odoo</th>
+                <th>Venta</th>
+                <th>Venta</th>
                 <th>Cliente</th>
+                <th>Comentarios</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th>Estado</th>
                 <th class="text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let u of vendedor; let i = index">
-                <td>{{ u.id_usuario }}</td>
-                <td>{{ u.nombre_usuario }}</td>
-                <td>{{ u.telefono_celular }}</td>
-                <td>{{ u.ubicacion_almacen || '-' }}</td>
-                <td>{{ u.diario || '-' }}</td>
-                <td>{{ u.cliente || '-' }}</td>
-                <td class="text-center">
+              <tr *ngFor="let u of facturas; let i = index">
+                <td>{{ u.id_odoo }}</td>
+                <td>{{ u.venta }}</td>
+                <td>{{ u.nombre_cliente }}</td>
+                <td>{{ u.comentarios }}</td>
+                <td>{{ u.total || '-' }}</td>
+                <td>{{ u.fecha_facturada }}</td>
+                <td>{{ u.activa }}</td>
+                                <td class="text-center">
                   <a class="btn btn-link-primary"
                      title="Editar"
-                     [routerLink]="['/usuarios/editar', u.id_usuario]">
+                     [routerLink]="['/usuarios/editar', u.id_solicitud]">
                     <i class="ti ti-pencil"></i>
                   </a>
                   <button class="btn btn-link-danger"
                           (click)="cambiarEstado(u)"
-                          [title]="u.estado_actual === 2 ? 'Archivar' : 'Activar'">
-                    <i [class]="u.estado_actual === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
+                          [title]="u.activa === 2 ? 'Archivar' : 'Activar'">
+                    <i [class]="u.activa === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
                   </button>
                 </td>
+                <td class="text-center">
+                </td>
               </tr>
-              <tr *ngIf="vendedor.length === 0">
+              <tr *ngIf="facturas.length === 0">
                 <td colspan="7" class="text-center text-muted">
-                  No hay usuarios disponibles.
+                  No hay facturas disponibles.
                 </td>
               </tr>
             </tbody>

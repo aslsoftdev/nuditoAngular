@@ -6,6 +6,8 @@ export const API_ENDPOINTS = {
   usuarios: `${API_BASE_URL}/api.usuarios.php`,
   login: `${API_BASE_URL}/api.login.php`,
   productos: `${API_BASE_URL}/api.productos.php`,
+  rutas: `${API_BASE_URL}/api.get_all_routes.php?filtro=%`,
+  solicitudesFacturas: `${API_BASE_URL}/api.get_invoice_requests.php`,
   categoriasProductos: `${API_BASE_URL}/api.categorias_productos.php`,
   unidadesMedida: `${API_BASE_URL}/api.unidades_medidas.php`,
   clientes: `${API_BASE_URL}/api.clientes.php`,
