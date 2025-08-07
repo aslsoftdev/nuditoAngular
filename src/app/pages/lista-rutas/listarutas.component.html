@@ -66,11 +66,6 @@
                      [routerLink]="['/usuarios/editar', u.usuario]">
                     <i class="ti ti-pencil"></i>
                   </a>
-                  <button class="btn btn-link-danger"
-                          (click)="cambiarEstado(u)"
-                          [title]="u.activa === 2 ? 'Archivar' : 'Activar'">
-                    <i [class]="u.activa === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
-                  </button>
                 </td>
                 <td class="text-center">
                 </td>

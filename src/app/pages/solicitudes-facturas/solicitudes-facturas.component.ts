@@ -20,7 +20,8 @@ interface SolicitudFactura{
 
 interface SolicitudFacturaresponse{
     status: boolean;
-    solicitudes: SolicitudFactura[];
+    solicitudes_factura: SolicitudFactura[];
+    mensaje?: string;
 }
 
 @Component({
@@ -45,9 +46,9 @@ export class SolicitudesFacturasComponent implements OnInit{
 
     obtenerSolicitudes(): void {
         this.cargando = true;
-        this.http.get<SolicitudFacturaresponse>(API_ENDPOINTS.solicitudesFacturas).subscribe({
+        this.http.get<SolicitudFacturaresponse>(API_ENDPOINTS.obtenerSolicitudFactura).subscribe({
             next: (response) => {
-                this.facturas = response.status ? (response as any).solicitudes_factura : [];
+                this.facturas = response.status ? response.solicitudes_factura : [];
                 this.cargando = false;
             },
             error: () => {
@@ -83,12 +84,12 @@ export class SolicitudesFacturasComponent implements OnInit{
               }).then(result => {
                 if (result.isConfirmed) {
                   // Si el usuario confirma, realiza la petición para cambiar el estado
-                  this.http.post<SolicitudFacturaresponse>(API_ENDPOINTS.solicitudesFacturas, {}).subscribe({
+                  this.http.post<SolicitudFacturaresponse>(API_ENDPOINTS.obtenerSolicitudFactura, {}).subscribe({
                     next: resp => {
                       if (resp.status) {
                         this.obtenerSolicitudes(); // Si es exitoso, recarga la lista de vendedores
                       } else {
-                        Swal.fire('Error', (resp as any).mensaje || 'Error desconocido', 'error'); // Muestra error si la respuesta no es exitosa
+                        Swal.fire('Error', resp.mensaje || 'Error desconocido', 'error'); // Muestra error si la respuesta no es exitosa
                       }
                     },
                     error: () => {

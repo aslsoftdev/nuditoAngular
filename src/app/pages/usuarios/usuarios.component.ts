@@ -49,7 +49,7 @@ export class UsuariosComponent implements OnInit {
   // Obtiene la lista de vendedores desde el backend
   obtenerVendedores(): void {
     this.cargando = true; // Activa el indicador de carga
-    this.http.get<any>(API_ENDPOINTS.vendedores).subscribe({
+    this.http.post<any>(API_ENDPOINTS.obtenerVendedores, {}).subscribe({
       next: (response) => {
         // Si la respuesta es exitosa, asigna los vendedores; si no, asigna un array vacío
         this.vendedores = response.status ? response.vendedores : [];
@@ -94,7 +94,7 @@ export class UsuariosComponent implements OnInit {
     }).then(result => {
       if (result.isConfirmed) {
         // Si el usuario confirma, realiza la petición para cambiar el estado
-        this.http.post<any>(API_ENDPOINTS.vendedores, {}).subscribe({
+        this.http.post<any>(API_ENDPOINTS.obtenerVendedores, {}).subscribe({
           next: resp => {
             if (resp.status) {
               this.obtenerVendedores(); // Si es exitoso, recarga la lista de vendedores

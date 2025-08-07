@@ -9,6 +9,23 @@ import Swal from 'sweetalert2';
 import { API_ENDPOINTS } from 'src/app/core/config/constants';
 import { FormFieldComponent } from 'src/app/shared/components/form-field/form-field.component';
 
+interface ConsultaVendedorResponse {
+  status: boolean;
+  mensaje?: string;
+  usuario: Vendedor[];
+}
+
+interface Vendedor {
+  id_usuario:         number;
+  nombre_usuario:     string;
+  telefono_celular:   string;
+  cumpleanos:         string;
+  departamento:       number;
+  puesto_trabajo:     number;
+  ubicacion_almacen:  number;
+  cliente:            number;
+}
+
 @Component({
   selector: 'app-usuario-form',
   standalone: true,
@@ -23,13 +40,11 @@ import { FormFieldComponent } from 'src/app/shared/components/form-field/form-fi
 })
 export class UsuarioFormComponent implements OnInit {
   form!: FormGroup;
-  cargando = true;
+  cargando = false;
   esEdicion = false;
   usuarioId = +(localStorage.getItem('id_usuario') || 0);
   idUsuario = 0;
 
-  modulos: any[] = [];
-  roles: any[] = [];
   permisosSeleccionados = new Set<number>();
 
   constructor(
@@ -39,6 +54,8 @@ export class UsuarioFormComponent implements OnInit {
     private router: Router
   ) {}
 
+
+  
   ngOnInit(): void {
     this.form = this.fb.group({
       nombre_usuario:     ['', Validators.required],
@@ -49,18 +66,15 @@ export class UsuarioFormComponent implements OnInit {
       contrasena:         ['']
     });
 
-    this.cargarModulos(() => {
-      this.cargarRoles(() => {
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
-          this.idUsuario = +id;
-          this.esEdicion = true;
-          this.cargarUsuario(this.idUsuario);
-        } else {
-          this.cargando = false;
-        }
-      });
-    });
+      // Obtener el id de la ruta si existe
+  this.route.paramMap.subscribe(params => {
+    const id = params.get('id');
+    if (id) {
+      this.idUsuario = +id;
+      this.esEdicion = true;
+      this.cargarUsuario(this.idUsuario);
+    }
+  });
   }
 
   private cargarUsuario(id: number): void {
@@ -70,115 +84,38 @@ export class UsuarioFormComponent implements OnInit {
       id_usuario: id,
       usuario:    this.usuarioId
     };
-
-    this.http.post<any>(API_ENDPOINTS.usuarios, body).subscribe({
+    this.http.post<ConsultaVendedorResponse>(`${API_ENDPOINTS.obtenerVendedor}?id_usuario=${this.idUsuario}`, body).subscribe({
       next: response => {
         this.cargando = false;
-        if (response.status && response.usuario) {
-          const u = response.usuario;
+        if (response.status && response.usuario.length > 0) {
+          const vendedor = response.usuario[0];
           this.form.patchValue({
-            nombre_usuario:     u.nombre_usuario,
-            usuario_valor:      u.usuario,
-            correo_electronico: u.correo_electronico,
-            numero_celular:     u.numero_celular,
-            rol:                u.rol
+            nombre_usuario:      vendedor.nombre_usuario,
+            numero_celular:     vendedor.telefono_celular,
+            cumpleanos:         vendedor.cumpleanos,
+            departamento:       vendedor.departamento,
+            puesto_trabajo:     vendedor.puesto_trabajo,
+            ubicacion_almacen:  vendedor.ubicacion_almacen,
+            cliente:            vendedor.cliente
           });
-          if (Array.isArray(u.permisos_modulos)) {
-            this.permisosSeleccionados = new Set(u.permisos_modulos);
-          }
         } else {
-          Swal.fire('Error', response.mensaje || 'No se encontró el usuario', 'error')
-            .then(() => this.router.navigate(['/usuarios']));
+          Swal.fire('Error', response.mensaje || 'Error al cargar el usuario', 'error');
         }
+        console.log('Respuesta al cargar usuario:', response);
       },
       error: () => {
         this.cargando = false;
-        Swal.fire('Error', 'No se pudo conectar al servidor.', 'error')
-          .then(() => this.router.navigate(['/usuarios']));
+        Swal.fire('Error', 'No se pudo cargar el usuario.', 'error');
       }
     });
+    console.log('Cargando usuario con ID:', this.idUsuario);
   }
 
-  private cargarModulos(callback?: () => void): void {
-    const body = {
-      action: 'lista_modulos_ASL',
-      usuario: this.usuarioId,
-      estados_actuales: [2]
-    };
-    this.http.post<any>(API_ENDPOINTS.modulosASL, body).subscribe({
-      next: response => {
-        if (response.status) {
-          this.modulos = (response.modulos_ASL || []).map((m: any) => ({
-            ...m,
-            permisos: Array.isArray(m.permisos) ? m.permisos : []
-          }));
-        }
-        callback?.();
-      },
-      error: () => {
-        Swal.fire('Error', 'No se pudieron cargar los módulos.', 'error');
-        callback?.();
-      }
-    });
-  }
 
-  private cargarRoles(callback?: () => void): void {
-    const body = {
-      action: 'lista_roles_usuarios',
-      usuario: this.usuarioId,
-      estados_actuales: [2]
-    };
-    this.http.post<any>(API_ENDPOINTS.roles, body).subscribe({
-      next: response => {
-        if (response.status) {
-          this.roles = response.roles || [];
-        }
-        callback?.();
-      },
-      error: () => {
-        Swal.fire('Error', 'No se pudieron cargar los roles.', 'error');
-        callback?.();
-      }
-    });
-  }
 
-  onRolChange(event: Event): void {
-    const rolId = +(event.target as HTMLSelectElement).value;
-    const rol = this.roles.find(r => r.id_rol === rolId);
-    if (rol?.permisos_modulos) {
-      this.permisosSeleccionados = new Set(rol.permisos_modulos);
-    }
-  }
 
-  permisoMarcado(id: number): boolean {
-    return this.permisosSeleccionados.has(id);
-  }
 
-  togglePermiso(id: number): void {
-    const nueva = new Set(this.permisosSeleccionados);
-    nueva.has(id) ? nueva.delete(id) : nueva.add(id);
-    this.permisosSeleccionados = nueva;
-  }
 
-  todosPermisosSeleccionados(): boolean {
-    return this.modulos.every(m =>
-      (m.permisos || []).every((p: any) =>
-        this.permisosSeleccionados.has(p.id_relacion)
-      )
-    );
-  }
-
-  toggleTodosLosPermisos(): void {
-    if (this.todosPermisosSeleccionados()) {
-      this.permisosSeleccionados.clear();
-    } else {
-      const todos = new Set<number>();
-      this.modulos.forEach(m =>
-        (m.permisos || []).forEach((p: any) => todos.add(p.id_relacion))
-      );
-      this.permisosSeleccionados = todos;
-    }
-  }
 
   guardar(): void {
     if (this.form.invalid) {
@@ -199,7 +136,7 @@ export class UsuarioFormComponent implements OnInit {
       estado_actual:      2,
       permisos_modulos:   Array.from(this.permisosSeleccionados)
     };
-    this.http.post<any>(API_ENDPOINTS.usuarios, payload).subscribe({
+    this.http.post<any>(API_ENDPOINTS.obtenerClientes, payload).subscribe({
       next: response => {
         this.cargando = false;
         if (response.status) {

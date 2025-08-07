@@ -72,7 +72,7 @@ export class ListarutasComponent implements OnInit {
 
   obtenerRutas(): void {
     this.cargando = true;
-    this.http.get<RutasResponse>(API_ENDPOINTS.rutas).subscribe({
+    this.http.post<RutasResponse>( `${API_ENDPOINTS.obtenerRutasidCliente}?id_usuario=${this.usuarioId}`, {}).subscribe({
       next: (response) => {
         this.rutas = response.status ? response.rutas : [];
         this.cargando = false;
@@ -96,35 +96,4 @@ export class ListarutasComponent implements OnInit {
   onBuscar(): void {
     // No es necesario, el getter hace el filtro automáticamente
   }
-
-  cambiarEstado(u: Ruta): void {
-    const esArchivado = u.activa === 3; // Verifica si el usuario está archivado
-    const accion = esArchivado ? 'activar' : 'archivar'; // Determina la acción a realizar
-
-    // Muestra un cuadro de diálogo de confirmación usando SweetAlert2
-    Swal.fire({
-        title: `¿Deseas ${accion} este usuario?`,
-        text: `Usuario: ${u.nombre}`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, confirmar',
-        cancelButtonText: 'Cancelar'
-      }).then(result => {
-        if (result.isConfirmed) {
-          // Si el usuario confirma, realiza la petición para cambiar el estado
-          this.http.post<any>(API_ENDPOINTS.vendedores, {}).subscribe({
-            next: resp => {
-              if (resp.status) {
-                this.obtenerRutas(); // Si es exitoso, recarga la lista de vendedores
-              } else {
-                Swal.fire('Error', resp.mensaje, 'error'); // Muestra error si la respuesta no es exitosa
-              }
-            },
-            error: () => {
-              Swal.fire('Error', 'No se pudo actualizar el estado.', 'error'); // Muestra error si la petición falla
-            }
-          });
-        }
-      });
-    }
 }

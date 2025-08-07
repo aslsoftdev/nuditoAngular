@@ -27,21 +27,6 @@ const routes: Routes = [
           import('./pages/dashboard/default/default.component').then(m => m.DefaultComponent)
       },
       {
-        path: 'roles',
-        loadComponent: () =>
-          import('./pages/roles-usuarios/roles-usuarios.component').then(m => m.RolesUsuariosComponent)
-      },
-      {
-        path: 'roles/nuevo',
-        loadComponent: () =>
-          import('./pages/roles-usuarios/rol-usuario-form/rol-usuario-form.component').then(m => m.RolUsuarioFormComponent)
-      },
-      {
-        path: 'roles/editar/:id',
-        loadComponent: () =>
-          import('./pages/roles-usuarios/rol-usuario-form/rol-usuario-form.component').then(m => m.RolUsuarioFormComponent)
-      },
-      {
         path: 'usuarios',
         loadComponent: () =>
           import('./pages/usuarios/usuarios.component').then(m => m.UsuariosComponent)
