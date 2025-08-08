@@ -22,6 +22,7 @@ interface Vendedor {
   nombre_rol:         string;
   nombre_estado:      string;
   estado_actual:      number;
+  nombre_ubicacion?: string;
 }
 
 // Decorador que define el componente Angular

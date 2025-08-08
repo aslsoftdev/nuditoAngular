@@ -25,92 +25,68 @@
 
             <!-- Nombre -->
             <div class="col-md-6">
-              <app-form-field
-                [control]="form.get('nombre_usuario')"
-                label="Nombre"
-                errorText="El nombre es obligatorio."
-              >
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="nombre_usuario"
-                  [ngClass]="{
-                    'is-invalid': form.get('nombre_usuario')?.invalid && form.get('nombre_usuario')?.touched
-                  }"
-                />
-              </app-form-field>
-            </div>
-
-            <!-- Usuario -->
-            <div class="col-md-6">
-              <app-form-field
-                [control]="form.get('usuario_valor')"
-                label="Usuario"
-                errorText="El usuario es obligatorio."
-              >
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="usuario_valor"
-                  [ngClass]="{
-                    'is-invalid': form.get('usuario_valor')?.invalid && form.get('usuario_valor')?.touched
-                  }"
-                />
-              </app-form-field>
-            </div>
-
-            <!-- Correo electrónico -->
-            <div class="col-md-6">
-              <app-form-field
-                [control]="form.get('correo_electronico')"
-                label="Correo electrónico"
-                errorText="Introduce un correo válido."
-              >
-                <input
-                  type="email"
-                  class="form-control"
-                  formControlName="correo_electronico"
-                  [ngClass]="{
-                    'is-invalid': form.get('correo_electronico')?.invalid && form.get('correo_electronico')?.touched
-                  }"
-                />
+              <app-form-field [control]="form.get('nombre_usuario')" label="Nombre"
+                errorText="El nombre es obligatorio.">
+                <input type="text" class="form-control" formControlName="nombre_usuario" [ngClass]="{
+                    'is-invalid': form.get('nombre_usuario')?.invalid && form.get('nombre_usuario')?.touched,
+                    'bg-grisesillo': esEdicion
+                  }" [readonly]="esEdicion" />
               </app-form-field>
             </div>
 
             <!-- Número celular -->
             <div class="col-md-6">
-              <app-form-field
-                [control]="form.get('numero_celular')"
-                label="Número celular"
-                errorText="Introduce un número válido."
-              >
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="numero_celular"
-                  [ngClass]="{
-                    'is-invalid': form.get('numero_celular')?.invalid && form.get('numero_celular')?.touched
-                  }"
-                />
+              <app-form-field [control]="form.get('numero_celular')" label="Número celular"
+                errorText="Introduce un número válido.">
+                <input type="text" class="form-control" formControlName="numero_celular" [ngClass]="{
+                    'is-invalid': form.get('numero_celular')?.invalid && form.get('numero_celular')?.touched,
+                    'bg-grisesillo': esEdicion
+                  }" 
+                  [readonly]="esEdicion"
+                  />
               </app-form-field>
             </div>
 
+            <!-- dropdown sucursal -->
+            <div class="col-md-6">
+              <app-form-field [control]="form.get('diario')" label="Diario" errorText="Selecciona un diario.">
+                <select class="form-select" formControlName="diario" [ngClass]="{
+        'is-invalid': form.get('diario')?.invalid && form.get('diario')?.touched}">
+                  <option value="">Selecciona un diario</option>
+                  <option *ngFor="let d of diarios" [value]="d.id_diario" [disabled]="d.eliminado">
+                    {{ d.nombre_diario }}
+                  </option>
+                </select>
+              </app-form-field>
+            </div>
+
+            <!-- dropdown cliente -->
+             <div class="col-md-6">
+              <app-form-field [control]="form.get('cliente')" label="Cliente" errorText="Selecciona un cliente.">
+                <select class="form-select" formControlName="cliente" [ngClass]="{'is-invalid': form.get('cliente')?.invalid && form.get('cliente')?.touched}">
+                  <option value="">Selecciona un cliente</option>
+                  <option *ngFor="let c of clientes" [value]="c.id_cliente">{{ c.nombre_cliente }}</option>
+                </select>
+              </app-form-field>
+             </div>
+
+             <!-- drop down almacenes -->
+              <div class="col-md-6">
+                <app-form-field [control]="form.get('ubicacion_almacen')" label="Ubicacion Almacén" errorText="Selecciona una ubicación de almacén.">
+                  <select class="form-select" formControlName="ubicacion_almacen" [ngClass]="{'is_invalid': form.get('cliente')?.invalid && form.get('cliente')?.touched}">
+                    <option value="">Selecciona un almacén</option>
+                    <option *ngFor="let ua of ubicacion_almacen" [value]="ua.id_ubicacion">{{ ua.nombre_ubicacion }}</option>
+                  </select>
+                </app-form-field>
+              </div>
+
+
             <!-- Contraseña -->
             <div class="col-md-6">
-              <app-form-field
-                [control]="form.get('contrasena')"
-                label="Contraseña"
-                errorText=""
-              >
-                <input
-                  type="password"
-                  class="form-control"
-                  formControlName="contrasena"
-                  placeholder="••••••"
-                  [ngClass]="{
+              <app-form-field [control]="form.get('contrasena')" label="Contraseña" errorText="">
+                <input type="password" class="form-control" formControlName="contrasena" placeholder="••••••" [ngClass]="{
                     'is-invalid': form.get('contrasena')?.invalid && form.get('contrasena')?.touched
-                  }"
-                />
+                  }" />
               </app-form-field>
               <small class="text-muted ms-1">
                 Dejar vacío para no cambiar la contraseña

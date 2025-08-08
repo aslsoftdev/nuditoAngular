@@ -26,6 +26,52 @@ interface Vendedor {
   cliente:            number;
 }
 
+interface ConsultaDiarios{
+  status: boolean;
+  mensaje?: string;
+  diarios: Diario[];
+}
+
+interface Diario {
+  id_diario: number;
+  id_odoo: number;
+  nombre_diario: string;
+  eliminado: boolean;
+}
+
+interface ConsultarClientesResponse {
+  status: boolean;
+  mensaje?: string;
+  clientes: Clientes[];
+}
+
+interface Clientes {
+  id_cliente: number;
+  nombre_cliente: string;
+  email: string;
+  telefono: string;
+  calle: string;
+  ciudad: string;
+  latitud?: number;
+  longitud?: number;
+  pais: string;
+  comentarios: string;
+  linea_credito: number;
+}
+
+interface UbicacionAlmacenes {
+  status: boolean;
+  mensaje?: string;
+  ubicaciones: Almacen[];
+}
+
+interface Almacen {
+  id_ubicacion: number;
+  id_odoo: number;
+  nombre_ubicacion: string;
+  eliminado: boolean;
+}
+
 @Component({
   selector: 'app-usuario-form',
   standalone: true,
@@ -59,11 +105,12 @@ export class UsuarioFormComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       nombre_usuario:     ['', Validators.required],
-      usuario_valor:      ['', Validators.required],
-      correo_electronico: ['', Validators.email],
       numero_celular:     [''],
       rol:                [null, Validators.required],
-      contrasena:         ['']
+      contrasena:         [''],
+      diario:             ["", Validators.required],
+      cliente:            ["", Validators.required],
+      ubicacion_almacen:  ["", Validators.required]
     });
 
       // Obtener el id de la ruta si existe
@@ -75,6 +122,11 @@ export class UsuarioFormComponent implements OnInit {
       this.cargarUsuario(this.idUsuario);
     }
   });
+
+  this.obtenerDiarios();
+  this.obtenerClientes();
+  this.obtenerUbicacionAlamacenes();
+
   }
 
   private cargarUsuario(id: number): void {
@@ -101,20 +153,62 @@ export class UsuarioFormComponent implements OnInit {
         } else {
           Swal.fire('Error', response.mensaje || 'Error al cargar el usuario', 'error');
         }
-        console.log('Respuesta al cargar usuario:', response);
       },
       error: () => {
         this.cargando = false;
         Swal.fire('Error', 'No se pudo cargar el usuario.', 'error');
       }
     });
-    console.log('Cargando usuario con ID:', this.idUsuario);
   }
 
+  diarios: Diario[] = [];
 
+  obtenerDiarios(): void {
+    this.http.post<ConsultaDiarios>(API_ENDPOINTS.obtenerDiarios, {}).subscribe({
+      next: response => {
+        if (response.status) {
+          this.diarios = response.diarios.map(d => ({
+            ...d,
+            eliminado: Boolean(Number(d.eliminado))
+          }));
+        } else {
+          Swal.fire('Error', response.mensaje || 'Error al cargar los diarios', 'error');
+        }
+      }
+    });
+  }
 
+  clientes: Clientes[] = [];
+  obtenerClientes(): void {
+    this.http.post<ConsultarClientesResponse>(API_ENDPOINTS.obtenerClientes, {}).subscribe({
+      next: response => {
+        if (response.status) {
+          this.clientes = response.clientes.map(c => ({
+            ...c,
+          }));
+        } else {
+          Swal.fire('Error', response.mensaje || 'Error al cargar los clientes', 'error');
+        }
+      }
+    });
+  }
 
-
+  ubicacion_almacen: Almacen[] = [];
+  obtenerUbicacionAlamacenes(): void {
+    this.http.post<UbicacionAlmacenes>(API_ENDPOINTS.obtenerUbicacionAlmacenes, {}). subscribe({
+      next: response => {
+        if (response.status) {
+          this.ubicacion_almacen = response.ubicaciones.map(ua => ({
+            ...ua,
+            eliminado: Boolean(Number(ua.eliminado))
+          }));
+        }
+        else {
+          Swal.fire('Error', response.mensaje || 'Error al cargar las ubicaciones de almacenes', 'error');
+        }
+      }
+    })
+  }
 
 
   guardar(): void {
