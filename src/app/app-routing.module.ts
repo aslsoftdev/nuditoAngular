@@ -49,6 +49,14 @@ const routes: Routes = [
         loadComponent: () =>
           import('./pages/usuarios/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent)
       },
+      {
+        path: 'lista-rutas/nuevo',
+        loadComponent: () => import('./pages/lista-rutas/lista-rutas-form/lista-rutas-form.component').then(m => m.ListaRutasFormComponent)
+      },
+      {
+        path: 'lista-rutas/editar/:id',
+        loadComponent: () => import('./pages/lista-rutas/lista-rutas-form/lista-rutas-form.component').then(m => m.ListaRutasFormComponent)
+      }
 
     ]
   },

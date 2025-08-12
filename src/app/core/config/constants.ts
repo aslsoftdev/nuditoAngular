@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
   actualizarTableroCliente: `${API_BASE_URL}/api.actualizar_tablero_cliente.php`,
   actualizarTableroVendedoresClientes: `${API_BASE_URL}/api.actualizar_tablero_vendedores_clientes.php`,
   actualizarVendedores: `${API_BASE_URL}/api.actualizar_vendedores.php`,
+  actualizarVendedor: `${API_BASE_URL}/api.actualizar_vendedor.php`,
   cancelarVisita: `${API_BASE_URL}/api.cancelar_visita.php`,
   cerrarRutas: `${API_BASE_URL}/api.cerrar_rutas.php`,
   conteoVentasPendientesOdoo: `${API_BASE_URL}/api.conteo_ventas_pendientes_odoo.php`,

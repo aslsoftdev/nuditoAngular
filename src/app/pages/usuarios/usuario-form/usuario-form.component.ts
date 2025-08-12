@@ -20,6 +20,7 @@ interface Vendedor {
   nombre_usuario:     string;
   telefono_celular:   string;
   cumpleanos:         string;
+  diario:             number;
   departamento:       number;
   puesto_trabajo:     number;
   ubicacion_almacen:  number;
@@ -70,6 +71,19 @@ interface Almacen {
   id_odoo: number;
   nombre_ubicacion: string;
   eliminado: boolean;
+}
+
+interface ActualizarVendedorResponse {
+  status: boolean;
+  message?: string;
+}
+
+interface ActualizarVendedorPayload {
+  id_usuario: number;
+  ubicacion_almacen?: number;
+  diario?: number;
+  cliente?: number;
+  contrasena?: string;
 }
 
 @Component({
@@ -142,9 +156,10 @@ export class UsuarioFormComponent implements OnInit {
         if (response.status && response.usuario.length > 0) {
           const vendedor = response.usuario[0];
           this.form.patchValue({
-            nombre_usuario:      vendedor.nombre_usuario,
+            nombre_usuario:     vendedor.nombre_usuario,
             numero_celular:     vendedor.telefono_celular,
             cumpleanos:         vendedor.cumpleanos,
+            diario:             vendedor.diario,
             departamento:       vendedor.departamento,
             puesto_trabajo:     vendedor.puesto_trabajo,
             ubicacion_almacen:  vendedor.ubicacion_almacen,
@@ -210,40 +225,27 @@ export class UsuarioFormComponent implements OnInit {
     })
   }
 
+ guardarusuario(): void {
+  const payload: ActualizarVendedorPayload = {
+    id_usuario: this.idUsuario,
+  };
 
-  guardar(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.cargando = true;
-    const payload = {
-      action:           'guardar_usuario',
-      id_usuario:       this.idUsuario,
-      usuario:          this.usuarioId,
-      nombre_usuario:   this.form.value.nombre_usuario,
-      usuario_valor:    this.form.value.usuario_valor,
-      correo_electronico: this.form.value.correo_electronico,
-      numero_celular:     this.form.value.numero_celular,
-      rol:                this.form.value.rol,
-      contrasena:         this.form.value.contrasena || '',
-      estado_actual:      2,
-      permisos_modulos:   Array.from(this.permisosSeleccionados)
-    };
-    this.http.post<any>(API_ENDPOINTS.obtenerClientes, payload).subscribe({
-      next: response => {
-        this.cargando = false;
-        if (response.status) {
-          Swal.fire('Éxito', response.mensaje || 'Usuario guardado correctamente', 'success')
-            .then(() => this.router.navigate(['/usuarios']));
-        } else {
-          Swal.fire('Error', response.mensaje || 'Error al guardar el usuario', 'error');
-        }
-      },
-      error: () => {
-        this.cargando = false;
-        Swal.fire('Error', 'No se pudo guardar el usuario.', 'error');
+  if (this.form.value.ubicacion_almacen) payload.ubicacion_almacen = this.form.value.ubicacion_almacen;
+  if (this.form.value.diario) payload.diario = this.form.value.diario;
+  if (this.form.value.cliente) payload.cliente = this.form.value.cliente;
+  if (this.form.value.contrasena) payload.contrasena = this.form.value.contrasena;
+
+  this.http.post<ActualizarVendedorResponse>(API_ENDPOINTS.actualizarVendedor, payload).subscribe({
+    next: response => {
+      if (response.status) {
+        Swal.fire('Éxito', response.message || 'Usuario actualizado correctamente', 'success');
+      } else {
+        Swal.fire('Error', response.message || 'Error al actualizar el usuario', 'error');
       }
-    });
-  }
+    },
+    error: () => {
+      Swal.fire('Error', 'No se pudo actualizar el usuario.', 'error');
+    }
+  })
+ }
 }

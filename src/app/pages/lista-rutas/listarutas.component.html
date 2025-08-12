@@ -2,9 +2,9 @@
   <div class="col-sm-12">
     <div class="card shadow-sm border-0">
       <div class="card-header pb-2 d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Vendedores</h5>
-        <a routerLink="/usuarios/nuevo" class="btn btn-sm btn-primary">
-          <i class="ti ti-plus me-1"></i> Agregar usuario
+        <h5 class="mb-0">Rutas</h5>
+        <a routerLink="/lista-rutas/nuevo" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Agregar ruta
         </a>
       </div>
 
@@ -63,7 +63,7 @@
                                 <td class="text-center">
                   <a class="btn btn-link-primary"
                      title="Editar"
-                     [routerLink]="['/usuarios/editar', u.usuario]">
+                     [routerLink]="['lista-rutas/editar', u.id_ruta]">
                     <i class="ti ti-pencil"></i>
                   </a>
                 </td>

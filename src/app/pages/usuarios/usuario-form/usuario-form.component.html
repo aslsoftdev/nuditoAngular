@@ -6,9 +6,9 @@
       <!-- Header -->
       <div class="card-header pb-2 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">
-          {{ esEdicion ? 'Editar Usuario' : 'Nuevo Usuario' }}
+          {{ esEdicion ? 'Editar Vendedor' : 'Nuevo Vendedor' }}
         </h5>
-        <button class="btn btn-secondary" (click)="guardar()">
+        <button class="btn btn-secondary" (click)="guardarusuario()" routerLink="/usuarios">
           <i class="ti ti-device-floppy me-2"></i> Guardar
         </button>
       </div>
@@ -26,11 +26,12 @@
             <!-- Nombre -->
             <div class="col-md-6">
               <app-form-field [control]="form.get('nombre_usuario')" label="Nombre"
-                errorText="El nombre es obligatorio.">
+                errorText="El nombre es obligatorio."
+                >
                 <input type="text" class="form-control" formControlName="nombre_usuario" [ngClass]="{
                     'is-invalid': form.get('nombre_usuario')?.invalid && form.get('nombre_usuario')?.touched,
                     'bg-grisesillo': esEdicion
-                  }" [readonly]="esEdicion" />
+                  }" [readonly]="esEdicion" /> 
               </app-form-field>
             </div>
 
