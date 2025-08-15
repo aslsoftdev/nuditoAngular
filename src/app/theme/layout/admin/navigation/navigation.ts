@@ -39,15 +39,7 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-navigation',
     children: [
-      {
-        id: 'roles',
-        title: 'Roles',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/roles',
-        icon: 'ti ti-accessible',
-        breadcrumbs: false
-      },
+
       {
         id: 'usuarios',
         title: 'Vendedores',
@@ -75,76 +67,6 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/solicitudes-facturas',
         icon: 'ti ti-file-invoice',
-        breadcrumbs: false
-      },
-
-      {
-        id: 'productos',
-        title: 'Productos',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/productos',
-        icon: 'ti ti-box',
-        breadcrumbs: false
-      },
-      
-      {
-        id: 'tipos-clientes',
-        title: 'Tipos de Cliente',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/tipos-clientes',
-        icon: 'ti ti-list-check',
-        breadcrumbs: false
-      },
-
-      {
-        id: 'clientes',
-        title: 'Clientes',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/clientes',
-        icon: 'ti ti-user',
-        breadcrumbs: false
-      },
-
-      {
-        id: 'tipos-proveedores',
-        title: 'Tipos de Proveedor',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/tipos-proveedores',
-        icon: 'ti ti-truck',
-        breadcrumbs: false
-      },
-
-      {
-        id: 'proveedores',
-        title: 'Proveedores',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/proveedores',
-        icon: 'ti ti-truck',
-        breadcrumbs: false
-      },
-
-      {
-        id: 'cotizaciones',
-        title: 'Cotizaciones',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/cotizaciones',
-        icon: 'ti ti-file-report',
-        breadcrumbs: false
-      },
-
-      {
-        id: 'ordenes-venta',
-        title: 'Órdenes Venta',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/ordenes-venta',
-        icon: 'ti ti-credit-card',
         breadcrumbs: false
       },
 
