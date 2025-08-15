@@ -56,6 +56,14 @@ const routes: Routes = [
       {
         path: 'lista-rutas/editar/:id',
         loadComponent: () => import('./pages/lista-rutas/lista-rutas-form/lista-rutas-form.component').then(m => m.ListaRutasFormComponent)
+      },
+      {
+        path: 'solicitudes-facturas/nuevo',
+        loadComponent: () => import('./pages/solicitudes-facturas/solicitues-facturas-form/solicitues-facturas-form.component').then(m => m.SolicituesFacturasFormComponent)
+      },
+      {
+        path: 'solicitudes-facturas/editar/:id',
+        loadComponent: () => import('./pages/solicitudes-facturas/solicitues-facturas-form/solicitues-facturas-form.component').then(m => m.SolicituesFacturasFormComponent)
       }
 
     ]

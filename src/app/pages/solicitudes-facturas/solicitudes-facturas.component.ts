@@ -6,23 +6,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
-interface SolicitudFactura{
-    id_solicitud: number;
-    venta: number;
-    facturada: number;
-    fecha_facturada: string;
-    comentarios: string;
-    activa: number;
-    total: number;
-    id_odoo: number;
-    nombre_cliente: string;
-}
-
-interface SolicitudFacturaresponse{
-    status: boolean;
-    solicitudes_factura: SolicitudFactura[];
-    mensaje?: string;
-}
+import { SolicitudFactura, SolicitudFacturaresponse } from 'src/app/core/models/factura.model';
 
 @Component({
   standalone: true,

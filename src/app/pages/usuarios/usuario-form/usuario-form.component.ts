@@ -9,69 +9,11 @@ import Swal from 'sweetalert2';
 import { API_ENDPOINTS } from 'src/app/core/config/constants';
 import { FormFieldComponent } from 'src/app/shared/components/form-field/form-field.component';
 
-interface ConsultaVendedorResponse {
-  status: boolean;
-  mensaje?: string;
-  usuario: Vendedor[];
-}
 
-interface Vendedor {
-  id_usuario:         number;
-  nombre_usuario:     string;
-  telefono_celular:   string;
-  cumpleanos:         string;
-  diario:             number;
-  departamento:       number;
-  puesto_trabajo:     number;
-  ubicacion_almacen:  number;
-  cliente:            number;
-}
-
-interface ConsultaDiarios{
-  status: boolean;
-  mensaje?: string;
-  diarios: Diario[];
-}
-
-interface Diario {
-  id_diario: number;
-  id_odoo: number;
-  nombre_diario: string;
-  eliminado: boolean;
-}
-
-interface ConsultarClientesResponse {
-  status: boolean;
-  mensaje?: string;
-  clientes: Clientes[];
-}
-
-interface Clientes {
-  id_cliente: number;
-  nombre_cliente: string;
-  email: string;
-  telefono: string;
-  calle: string;
-  ciudad: string;
-  latitud?: number;
-  longitud?: number;
-  pais: string;
-  comentarios: string;
-  linea_credito: number;
-}
-
-interface UbicacionAlmacenes {
-  status: boolean;
-  mensaje?: string;
-  ubicaciones: Almacen[];
-}
-
-interface Almacen {
-  id_ubicacion: number;
-  id_odoo: number;
-  nombre_ubicacion: string;
-  eliminado: boolean;
-}
+import { ConsultaVendedorResponse } from 'src/app/core/models/vendedor.model';
+import { ConsultaDiarios, Diario } from 'src/app/core/models/diarios.model';
+import { ConsultarClientesResponse, Clientes } from 'src/app/core/models/clientes.model';
+import { UbicacionAlmacenes, Almacen } from 'src/app/core/models/almacenes.model';
 
 interface ActualizarVendedorResponse {
   status: boolean;

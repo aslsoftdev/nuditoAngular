@@ -55,15 +55,15 @@
             </thead>
             <tbody>
               <tr *ngFor="let u of rutas; let i = index">
-                <td>{{ u.usuario }}</td>
-                <td>{{ u.nombre }}</td>
+                <td>{{ u.id_ruta }}</td>
+                <td>{{ u.nombre_usuario }}</td>
                 <td>{{ u.fecha_inicio }}</td>
                 <td>{{ u.fecha_fin }}</td>
                 <td>{{ u.estado_actual || '-' }}</td>
                                 <td class="text-center">
                   <a class="btn btn-link-primary"
                      title="Editar"
-                     [routerLink]="['lista-rutas/editar', u.id_ruta]">
+                     [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
                     <i class="ti ti-pencil"></i>
                   </a>
                 </td>

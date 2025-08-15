@@ -6,49 +6,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
-interface DineroEntregado {
-  total_efectivo: number;
-  total_transferencias: number;
-  total_faltante: number;
-}
-
-interface ExistenciaProducto {
-  producto: number;
-  existencia_inicial: number;
-  total_vendido: number;
-  existencia_final: number;
-  existencia_real: number;
-  diferencia: number;
-  regresar_almacen: number;
-  total_devoluciones: number;
-}
-
-interface Ruta {
-  id_ruta: number;
-  usuario: number;
-  fecha_inicio: string;
-  fecha_fin: string;
-  fecha_cerrada: string;
-  total_faltante: number;
-  json_dinero_entregado: string;
-  json_existencias: string;
-  cerrada_por: number;
-  activa: number;
-  nombre: string;
-  estado_actual: string;
-  total_efectivo: number;
-  total_tarjeta: number;
-  total_transferencias: number;
-  total_credito: number;
-  total_pagos_creditos_efectivo: number;
-  total_pagos_creditos_tarjeta: number;
-  total_pagos_creditos_transferencias: number;
-}
-
-interface RutasResponse {
-  status: boolean;
-  rutas: Ruta[];
-}
+import { RutasResponse, Ruta } from 'src/app/core/models/rutas.model';
 
 @Component({
   standalone: true,
@@ -88,7 +46,7 @@ export class ListarutasComponent implements OnInit {
     const q = this.busqueda.trim().toLowerCase();
     return q
       ? this.rutas.filter(r =>
-        r.nombre.toLowerCase().includes(q)
+        r.nombre_usuario.toLowerCase().includes(q)
       )
       : [...this.rutas];
   }
