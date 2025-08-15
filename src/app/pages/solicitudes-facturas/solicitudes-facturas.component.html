@@ -63,7 +63,7 @@
                 <td>{{ u.venta }}</td>
                 <td>{{ u.nombre_cliente }}</td>
                 <td>{{ u.comentarios }}</td>
-                <td>{{ u.total || '-' }}</td>
+                <td>{{ u.total ? (u.total | currency:'USD':'symbol':'1.2-2') : '-' }}</td>
                 <td>{{ u.fecha_facturada }}</td>
                 <td>{{ u.facturada ? 'Sí' : 'No' }}</td>
                 <td class="text-center">
