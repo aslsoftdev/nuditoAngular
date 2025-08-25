@@ -70,6 +70,16 @@ export const NavigationItems: NavigationItem[] = [
         breadcrumbs: false
       },
 
+      {
+        id: 'tablero-clientes',
+        title: 'Tablero de clientes',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/tablero-clientes',
+        icon: 'ti ti-users',
+        breadcrumbs: false
+      }
+
       /*
       {
         id: '',

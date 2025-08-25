@@ -8,6 +8,7 @@ import { EstadoBadgePipe } from 'src/app/shared/pipes/estadoClase.pipe';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
+
 // Definición de la interfaz Vendedor para tipar los datos de usuario
 interface Vendedor {
   id_usuario:         number;

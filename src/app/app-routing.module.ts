@@ -64,6 +64,10 @@ const routes: Routes = [
       {
         path: 'solicitudes-facturas/editar/:id',
         loadComponent: () => import('./pages/solicitudes-facturas/solicitues-facturas-form/solicitues-facturas-form.component').then(m => m.SolicituesFacturasFormComponent)
+      },
+      {
+        path: 'tablero-clientes',
+        loadComponent: () => import('./pages/tablero-clientes/tablero-clientes.component').then(m => m.TableroClientesComponent)
       }
 
     ]

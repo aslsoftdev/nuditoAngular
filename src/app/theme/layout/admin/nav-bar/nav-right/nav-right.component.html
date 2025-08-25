@@ -2,23 +2,29 @@
   <ul class="list-unstyled">
     <li>
       <div class="dropdown pc-h-item" ngbDropdown>
-        <a
-          class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0"
-          data-bs-toggle="dropdown"
-          href="javascript:"
-          ngbDropdownToggle
-        >
-          <i class="ti ti-bell"></i>
-        </a>
-        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
-          <div class="dropdown-header">
-            <a href="javascript:!" class="link-primary float-end text-decoration-underline">Marcar todas como leídas</a>
-            <h5>
-              Notificaciones
-              <span class="badge bg-warning rounded-pill ms-1">01</span>
-            </h5>
-          </div>
-          <!-- <ng-scrollbar style="height: calc(100vh - 215px)" visibility="hover">
+    <li class="me-2">
+      <button class="btn btn-outline-primary" (click)="sincronizarDatos()">
+        <i class="ti ti-refresh"></i> Sincronizar datos
+      </button>
+    </li>
+    <li class="me-2">
+      <button class="btn btn-outline-success" (click)="enviarVentas()">
+        <i class="ti ti-send"></i> Enviar ventas ({{ conteo }})
+      </button>
+    </li>
+    <a class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
+      href="javascript:" ngbDropdownToggle>
+      <i class="ti ti-bell"></i>
+    </a>
+    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
+      <div class="dropdown-header">
+        <a href="javascript:!" class="link-primary float-end text-decoration-underline">Marcar todas como leídas</a>
+        <h5>
+          Notificaciones
+          <span class="badge bg-warning rounded-pill ms-1">01</span>
+        </h5>
+      </div>
+      <!-- <ng-scrollbar style="height: calc(100vh - 215px)" visibility="hover">
             <div class="dropdown-header px-0 text-wrap">
               <div class="list-group list-group-flush w-100">
                 <div class="list-group-item">
@@ -107,54 +113,50 @@
               </div>
             </div>
           </ng-scrollbar> -->
-          <div class="dropdown-divider"></div>
-          <div class="text-center py-2">
-            <a href="javascript:" class="link-primary">Marcar todas como leídas</a>
-          </div>
-        </div>
+      <div class="dropdown-divider"></div>
+      <div class="text-center py-2">
+        <a href="javascript:" class="link-primary">Marcar todas como leídas</a>
       </div>
-    </li>
-    <li>
-      <div class="dropdown pc-h-item header-user-profile" ngbDropdown>
-        <a
-          class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
-          data-bs-toggle="dropdown"
-          href="javascript:"
-          ngbDropdownToggle
-        >
-          <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar" />
-          <span>
-            <i class="ti ti-settings"></i>
-          </span>
-        </a>
-        <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
-          <div class="dropdown-header">
-            <h4>
-              Buenos días,
-              <span class="small text-muted">{{ nombreUsuario }}</span>
-            </h4>
-            <p class="text-muted">Administrador</p>
+    </div>
+</div>
+</li>
+<li>
+  <div class="dropdown pc-h-item header-user-profile" ngbDropdown>
+    <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
+      href="javascript:" ngbDropdownToggle>
+      <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar" />
+      <span>
+        <i class="ti ti-settings"></i>
+      </span>
+    </a>
+    <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
+      <div class="dropdown-header">
+        <h4>
+          Buenos días,
+          <span class="small text-muted">{{ nombreUsuario }}</span>
+        </h4>
+        <p class="text-muted">Administrador</p>
 
-            <!-- <form class="header-search">
+        <!-- <form class="header-search">
               <div class="search-btn">
                 <i class="ti ti-search"></i>
               </div>
               <input type="search" class="form-control" placeholder="Search profile options" />
             </form> -->
-            <hr />
-            <ng-scrollbar style="height: calc(100vh - 280px)" visibility="hover">
-              <!-- <a [routerLink]="['/guest/register']" class="dropdown-item">
+        <hr />
+        <ng-scrollbar style="height: calc(100vh - 280px)" visibility="hover">
+          <!-- <a [routerLink]="['/guest/register']" class="dropdown-item">
                 <i class="ti ti-settings"></i>
                 <span>Configuración</span>
               </a> -->
-              <a class="dropdown-item"  (click)="logout()">
-                <i class="ti ti-logout"></i>
-                <span>Cerrar sesión</span>
-              </a>
-            </ng-scrollbar>
-          </div>
-        </div>
+          <a class="dropdown-item" tabindex="0" (click)="logout()" (keyup)="($event.key === 'Enter' || $event.key === ' ') && logout()">
+            <i class="ti ti-logout"></i>
+            <span>Cerrar sesión</span>
+          </a>
+        </ng-scrollbar>
       </div>
-    </li>
-  </ul>
+    </div>
+  </div>
+</li>
+</ul>
 </div>

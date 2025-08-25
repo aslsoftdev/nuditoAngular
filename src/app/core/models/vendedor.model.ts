@@ -4,7 +4,7 @@ export interface ConsultaVendedorResponse {
   usuario: Vendedor[];
 }
 
-interface Vendedor {
+export interface Vendedor {
   id_usuario:         number;
   nombre_usuario:     string;
   telefono_celular:   string;
