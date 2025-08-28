@@ -30,7 +30,7 @@ export class ListarutasComponent implements OnInit {
 
   obtenerRutas(): void {
     this.cargando = true;
-    this.http.post<RutasResponse>( `${API_ENDPOINTS.obtenerRutasidCliente}?id_usuario=${this.usuarioId}`, {}).subscribe({
+    this.http.post<RutasResponse>( `${API_ENDPOINTS.obtenerRutas}?filtro=%`, {}).subscribe({
       next: (response) => {
         this.rutas = response.status ? response.rutas : [];
         this.cargando = false;

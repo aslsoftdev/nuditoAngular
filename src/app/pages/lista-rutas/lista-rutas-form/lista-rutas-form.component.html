@@ -1,22 +1,124 @@
-<div class="row mt-2">
-    <div class="col-sm-12">
-        <div class="card shadow-sm border-0">
+<div class="container-fluid mt-3" *ngIf="ruta">
 
-            <!-- Header -->
-             <div class="card-header pb-2 d-flex justify-content-between align-items-center">
-                 <h5 class="mb-0">{{ esEdicion ? 'Ver ruta' : 'Crear ruta' }}</h5>
-                 <!-- No olvides agregar la funcion que guarda la ruta -->
-                 <button class="btn btn-primary" > <i class="ti ti-device-floppy me-2"></i>{{ esEdicion ? 'Actualizar' : 'Crear' }}</button>
-             </div>
+  <!-- Resumen en tarjetas KPI -->
+  <div class="row g-3 mb-4 text-center">
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 p-4 bg-primary text-white rounded-3">
+        <i class="ti ti-user fs-1 mb-2"></i>
+        <h6 class="mb-1">Vendedor</h6>
+        <h4 class="fw-bold">{{ ruta.nombre_usuario }}</h4>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 p-4 bg-warning text-dark rounded-3">
+        <i class="ti ti-clock fs-1 mb-2"></i>
+        <h6 class="mb-1">Duración</h6>
+        <h4 class="fw-bold">{{ ruta.duracion }}</h4>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 p-4 bg-success text-white rounded-3">
+        <i class="ti ti-cash fs-1 mb-2"></i>
+        <h6 class="mb-1">Efectivo</h6>
+        <h4 class="fw-bold">${{ ruta.total_efectivo }}</h4>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 p-4 bg-danger text-white rounded-3">
+        <i class="ti ti-credit-card fs-1 mb-2"></i>
+        <h6 class="mb-1">Crédito</h6>
+        <h4 class="fw-bold">${{ ruta.total_credito }}</h4>
+      </div>
+    </div>
+  </div>
 
-            <!-- Loader Overlay -->
-            <div *ngIf="cargando" class="loader-overlay">
-              <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
-            </div>
-
-             <!-- Body -->
-              <div class="card-body pt-3">
-              </div>
+  <!-- Gráfico -->
+    <!--
+    <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">
+        <i class="ti ti-chart-pie me-2 text-primary"></i>Distribución de Ventas
+        </h5>
+        <div class="d-flex justify-content-center">
+        <canvas baseChart 
+            [data]="chartData"
+            [options]="chartOptions"
+            type="doughnut"
+            height="150">
+        </canvas>
         </div>
     </div>
+    </div>
+    -->
+
+  <!-- Existencias -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h5 class="fw-bold mb-3">
+        <i class="ti ti-package me-2 text-secondary"></i>Existencias
+      </h5>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Producto</th>
+              <th>Inicial</th>
+              <th>Ventas</th>
+              <th>Devoluciones</th>
+              <th>Final</th>
+              <th>Real</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of ruta.detalles">
+              <td class="fw-semibold">{{ d.nombre_producto }}</td>
+              <td>{{ d.existencia_inicial }}</td>
+              <td class="text-danger fw-bold">{{ d.ventas }}</td>
+              <td>{{ d.devoluciones }}</td>
+              <td>{{ d.existencia_real }}</td>
+              <td>{{ d.existencia_real }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visitas -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h5 class="fw-bold mb-3">
+        <i class="ti ti-users me-2 text-secondary"></i>Visitas
+      </h5>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Clasificación</th>
+              <th>Fecha</th>
+              <th>Venta</th>
+              <th>Método</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of ruta.visitas">
+              <td>{{ v.cliente }}</td>
+              <td class="fw-semibold">{{ v.nombre_cliente }}</td>
+              <td>
+                <span class="badge bg-success">{{ v.nombre_clasificacion }}</span>
+              </td>
+              <td>{{ v.fecha_registro | date:'short' }}</td>
+              <td class="fw-bold text-primary">${{ v.ventas[0]?.total }}</td>
+              <td>
+                <span class="badge bg-info text-dark">{{ v.ventas[0]?.pagos[0]?.metodo_pago }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>

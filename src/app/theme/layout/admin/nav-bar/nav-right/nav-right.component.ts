@@ -28,11 +28,11 @@ export class NavRightComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Leer el nombre de usuario guardado tras el login
     this.nombreUsuario = localStorage.getItem('nombre_usuario') || '';
-    this.EnviarConteoVentasPendientes();
+    this.obtenerConteoVentasPendientes();
     
     // Ejecutar cada 10 segundos
     this.intervalId = setInterval(() => {
-      this.EnviarConteoVentasPendientes();
+      this.obtenerConteoVentasPendientes();
     }, 10000);
   }
 
@@ -60,7 +60,7 @@ export class NavRightComponent implements OnInit, OnDestroy {
         Swal.showLoading();
       }
     });
-    fetch('https://aslsoft.dev/clientes/nudito/sincronizar_odoo.php')
+    fetch(API_ENDPOINTS.sincronizarOdoo)
       .then(response => response.json())
       .then(data => {
         if (data.status) {
@@ -83,7 +83,7 @@ export class NavRightComponent implements OnInit, OnDestroy {
         Swal.showLoading();
       }
     });
-    fetch('https://aslsoft.dev/clientes/nudito/enviar_ventas_odoo.php')
+    fetch(API_ENDPOINTS.enviarVentasOdoo)
     .then(response => response.json())
     .then(data => {
       if (data.status) {
@@ -94,7 +94,7 @@ export class NavRightComponent implements OnInit, OnDestroy {
     })
   }
 
-  EnviarConteoVentasPendientes(): void {
+  obtenerConteoVentasPendientes(): void {
     this.http.post<MensajeConteoVentasPendientes>(API_ENDPOINTS.conteoVentasPendientesOdoo, {}).subscribe({
       next: (response) => {
         if (response.status) {

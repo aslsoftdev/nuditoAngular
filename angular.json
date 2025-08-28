@@ -20,7 +20,7 @@
             "allowedCommonJsDependencies": [
               "apexcharts"
             ],
-            "baseHref": "/clientes/nudito/admin/",
+            "baseHref": "/admin/",
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",

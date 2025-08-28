@@ -23,7 +23,9 @@ interface Vendedor {
   nombre_rol:         string;
   nombre_estado:      string;
   estado_actual:      number;
-  nombre_ubicacion?: string;
+  nombre_ubicacion?:  string;
+  nombre_diario?:     string;
+  nombre_cliente?:    string;
 }
 
 // Decorador que define el componente Angular
@@ -32,7 +34,8 @@ interface Vendedor {
   standalone: true, // Permite que el componente sea independiente
   templateUrl: './usuarios.component.html', // Ruta de la plantilla HTML
   styleUrls: ['./usuarios.component.scss'], // Ruta de los estilos
-  imports: [CommonModule, RouterModule, EstadoBadgePipe, FormsModule] // Módulos importados
+  imports: [CommonModule, RouterModule, FormsModule] // Módulos importados
+ // Módulos importados
 })
 export class UsuariosComponent implements OnInit {
   vendedores: Vendedor[] = []; // Lista de vendedores obtenidos del backend

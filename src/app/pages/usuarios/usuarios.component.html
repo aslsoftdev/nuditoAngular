@@ -3,9 +3,6 @@
     <div class="card shadow-sm border-0">
       <div class="card-header pb-2 d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Vendedores</h5>
-        <a routerLink="/usuarios/nuevo" class="btn btn-sm btn-primary">
-          <i class="ti ti-plus me-1"></i> Agregar usuario
-        </a>
       </div>
 
       <div class="card-body pt-2">
@@ -71,8 +68,8 @@
                 <td>{{ u.nombre_usuario }}</td>
                 <td>{{ u.telefono_celular }}</td>
                 <td>{{ u.nombre_ubicacion || '-' }}</td>
-                <td>{{ u.diario || '-' }}</td>
-                <td>{{ u.cliente || '-' }}</td>
+                <td>{{ u.nombre_diario || '-' }}</td>
+                <td>{{ u.nombre_cliente || '-' }}</td>
                 <td class="text-center">
                   <a class="btn btn-link-primary"
                      title="Editar"
