@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://elnudito.com.mx/backend';
+export const API_BASE_URL = 'https://elnudito.com.mx/backend_migracion';
 
 export const API_ENDPOINTS = {
   //Voy a poner aqui las apis que conozco

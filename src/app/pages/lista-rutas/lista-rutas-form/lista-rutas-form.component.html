@@ -9,6 +9,7 @@
         <h4 class="fw-bold">{{ ruta.nombre_usuario }}</h4>
       </div>
     </div>
+
     <div class="col-md-3">
       <div class="card shadow-sm border-0 p-4 bg-warning text-dark rounded-3">
         <i class="ti ti-clock fs-1 mb-2"></i>
@@ -16,42 +17,74 @@
         <h4 class="fw-bold">{{ ruta.duracion }}</h4>
       </div>
     </div>
+
+    <!-- Clientes Visitados -->
     <div class="col-md-3">
       <div class="card shadow-sm border-0 p-4 bg-success text-white rounded-3">
-        <i class="ti ti-cash fs-1 mb-2"></i>
-        <h6 class="mb-1">Efectivo</h6>
-        <h4 class="fw-bold">${{ ruta.total_efectivo }}</h4>
+        <i class="ti ti-users fs-1 mb-2"></i>
+        <h6 class="mb-1">Clientes Visitados</h6>
+        <h4 class="fw-bold">0/0</h4>
       </div>
     </div>
+
+    <!-- Clientes Cerrados -->
     <div class="col-md-3">
       <div class="card shadow-sm border-0 p-4 bg-danger text-white rounded-3">
-        <i class="ti ti-credit-card fs-1 mb-2"></i>
-        <h6 class="mb-1">Crédito</h6>
-        <h4 class="fw-bold">${{ ruta.total_credito }}</h4>
+        <i class="ti ti-door-exit fs-1 mb-2"></i>
+        <h6 class="mb-1">Clientes Cerrados</h6>
+        <h4 class="fw-bold">0</h4>
       </div>
     </div>
   </div>
 
-  <!-- Gráfico -->
-    <!--
-    <div class="card shadow-sm border-0 mb-4">
+  <!-- INFO RUTA -->
+  <div class="card shadow-sm border-0 mb-4">
     <div class="card-body">
-        <h5 class="fw-bold mb-3">
-        <i class="ti ti-chart-pie me-2 text-primary"></i>Distribución de Ventas
-        </h5>
-        <div class="d-flex justify-content-center">
-        <canvas baseChart 
-            [data]="chartData"
-            [options]="chartOptions"
-            type="doughnut"
-            height="150">
-        </canvas>
-        </div>
+      <h5 class="fw-bold mb-3">
+        <i class="ti ti-road me-2 text-primary"></i> Información de la Ruta
+      </h5>
+      <p><strong>Folio:</strong> {{ ruta.id_ruta }}</p>
+      <p>
+        <strong>Estado:</strong>
+        <span class="badge"
+              [ngClass]="{
+                'bg-warning text-dark': ruta.estado_actual === 'En Proceso',
+                'bg-success': ruta.estado_actual === 'Terminada',
+                'bg-danger': ruta.estado_actual === 'Cerrada'
+              }">
+          {{ ruta.estado_actual }}
+        </span>
+      </p>
+      <p *ngIf="ruta.fecha_inicio"><strong>Fecha inicio:</strong> {{ ruta.fecha_inicio | date:'short' }}</p>
+      <p *ngIf="ruta.fecha_fin"><strong>Fecha fin:</strong> {{ ruta.fecha_fin | date:'short' }}</p>
+      <p *ngIf="ruta.fecha_cerrada"><strong>Fecha cerrada:</strong> {{ ruta.fecha_cerrada | date:'short' }}</p>
     </div>
-    </div>
-    -->
+  </div>
 
-  <!-- Existencias -->
+  <!-- DINERO -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h5 class="fw-bold mb-3">
+        <i class="ti ti-cash me-2 text-success"></i> Dinero
+      </h5>
+      <ul class="list-unstyled">
+        <li><strong>Total Efvo. Calculado:</strong> ${{ ruta.total_efectivo! + ruta.total_pagos_creditos_efectivo! }}</li>
+        <li><strong>Total Trans. Calculadas:</strong> ${{ ruta.total_transferencias! + ruta.total_pagos_creditos_transferencias! }}</li>
+        <li><strong>Total Crédito:</strong> ${{ ruta.total_credito }}</li>
+        <li><strong>Total Efectivo:</strong> ${{ ruta.dineroEntregado!.totalEfectivo }}</li>
+        <li><strong>Total Transferencias:</strong> ${{ ruta.dineroEntregado!.totalTransferencias }}</li>
+        <li><strong>Total Ruta:</strong> ${{ ruta.total_credito! + ruta.total_efectivo! + ruta.total_transferencias! + ruta.total_tarjeta! + ruta.total_pagos_creditos_efectivo }}</li>
+        <li *ngIf="ruta.estado_actual === 'Cerrada'">
+          <strong>Faltante:</strong> ${{ ruta.dineroEntregado!.totalFaltante }}
+        </li>
+        <li>
+          <strong>A entregar:</strong> ${{ ruta.total_efectivo! + ruta.total_pagos_creditos_efectivo + faltanteSobrante! }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXISTENCIAS -->
   <div class="card shadow-sm border-0 mb-4">
     <div class="card-body">
       <h5 class="fw-bold mb-3">
@@ -84,7 +117,7 @@
     </div>
   </div>
 
-  <!-- Visitas -->
+  <!-- VISITAS -->
   <div class="card shadow-sm border-0">
     <div class="card-body">
       <h5 class="fw-bold mb-3">

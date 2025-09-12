@@ -12,8 +12,8 @@ import { RutasResponse, Ruta } from 'src/app/core/models/rutas.model';
   standalone: true,
   selector: 'app-listas-rutas',
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './listarutas.component.html',
-  styleUrls: ['./listarutas.component.scss']
+  templateUrl: './lista-rutas.component.html',
+  styleUrls: ['./lista-rutas.component.scss']
 })
 export class ListarutasComponent implements OnInit {
   rutas: Ruta[] = [];

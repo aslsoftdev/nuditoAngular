@@ -1,26 +1,60 @@
 export interface RutaPorid {
   status: boolean;
   message?: string;
-  route: Ruta;   // 👈 aquí ya no es Ruta[]
+  ruta: Ruta;
 }
 
 export interface Ruta {
+  // Identificadores
+  id_ruta: number;
+  usuario: number;
+  cerrada_por: number;
+  eliminado: number;
+
+  // Datos generales
   nombre_usuario: string;
-  fecha_inicio: string;
-  fecha_fin: string;
-  total_faltante: number;   // 👈 lo tenías como total_faltantes
-  json_dinero_entregado: string;
-  json_existencias: string;
+  fecha_inicio: string | null;
+  fecha_fin: string | null;
+  fecha_cerrada: string | null;
   estado_actual: string;
-  total_efectivo: number;
-  total_tarjeta: number;
-  total_transferencias: number; // 👈 ojo, tu API manda en plural
-  total_credito: number;
   duracion: string;
 
-  // Relacionados
+  // Totales de dinero
+  total_efectivo: number;
+  total_tarjeta: number;
+  total_transferencias: number;
+  total_credito: number;
+  total_faltante: number;
+
+  total_pagos_creditos_efectivo: number;
+  total_pagos_creditos_tarjeta: number;
+  total_pagos_creditos_transferencias: number;
+
+  // Campos JSON que pueden llegar como objeto o string
+  json_dinero_entregado: DineroEntregado | string;
+  json_existencias: Existencia[] | string;
+
+  // Relaciones
   detalles: DetalleRuta[];
   visitas: Visita[];
+}
+
+export interface DineroEntregado {
+  total_efectivo: number;
+  total_transferencias: number;
+  total_faltante: number;
+  total_sobrante?: number; // opcional, por si se usa en el futuro
+}
+
+export interface Existencia {
+  producto: number;
+  existencia_inicial: number;
+  total_vendido: number;
+  existencia_final: number;
+  existencia_real: number;
+  diferencia: number;
+  regresar_almacen: number;
+  total_devoluciones: number;
 }
 
 export interface DetalleRuta {
@@ -33,6 +67,8 @@ export interface DetalleRuta {
   existencia_real: number;
   diferencia: number;
   regreso: number;
+  estado_actual: number;
+  eliminado: number;
   nombre_producto: string;
 }
 
@@ -41,6 +77,7 @@ export interface Visita {
   cliente: number;
   clasificacion_visita: number;
   fecha_registro: string;
+  fecha_cancelacion?: string | null;
   nombre_cliente: string;
   nombre_clasificacion: string;
   ventas: Venta[];

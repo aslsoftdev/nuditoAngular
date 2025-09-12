@@ -33,7 +33,7 @@ const routes: Routes = [
       },
       {
         path: 'lista-rutas',
-        loadComponent: () => import('./pages/lista-rutas/listarutas.component').then(m => m.ListarutasComponent)
+        loadComponent: () => import('./pages/lista-rutas/lista-rutas.component').then(m => m.ListarutasComponent)
       },
       {
         path: 'solicitudes-facturas',

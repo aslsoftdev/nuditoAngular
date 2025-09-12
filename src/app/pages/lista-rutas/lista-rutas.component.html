@@ -17,11 +17,7 @@
           <!-- Buscador -->
           <div class="col-md-4">
             <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Buscar por nombre..."
-                [(ngModel)]="busqueda"
+              <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="busqueda"
                 (keyup.enter)="onBuscar()" />
               <button class="btn btn-outline-secondary" type="button" (click)="onBuscar()">
                 <i class="ti ti-search"></i>
@@ -37,6 +33,7 @@
           </div>
         </div>
 
+        <!-- TABLA -->
         <!-- TABLA -->
         <div class="table-responsive" *ngIf="!cargando">
           <table class="table table-hover bg-white">
@@ -56,17 +53,53 @@
                 <td>{{ u.nombre_usuario }}</td>
                 <td>{{ u.fecha_inicio }}</td>
                 <td>{{ u.fecha_fin }}</td>
-                <td>{{ u.estado_actual || '-' }}</td>
-                                <td class="text-center">
-                  <a class="btn btn-link-primary"
-                     title="Editar"
-                     [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
-                    <i class="ti ti-pencil"></i>
-                  </a>
+
+                <!-- BADGE DE ESTADO -->
+                <td>
+                  <span class="badge bg-warning" *ngIf="u.estado_actual === 'En Proceso'">
+                    {{ u.estado_actual }}
+                  </span>
+                  <span class="badge bg-success" *ngIf="u.estado_actual === 'Terminada'">
+                    {{ u.estado_actual }}
+                  </span>
+                  <span class="badge bg-danger" *ngIf="u.estado_actual === 'Cerrada'">
+                    {{ u.estado_actual }}
+                  </span>
+                  <span class="badge bg-secondary" *ngIf="!u.estado_actual">
+                    -
+                  </span>
                 </td>
+
+                <!-- ACCIONES -->
                 <td class="text-center">
+                  <!-- Cerrada → solo ojo -->
+                  <ng-container *ngIf="u.estado_actual === 'Cerrada'">
+                    <a class="btn btn-link-primary" title="Ver detalle"
+                      [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
+                      <i class="ti ti-eye"></i>
+                    </a>
+                  </ng-container>
+
+                  <!-- Terminada → lápiz + desbloquear -->
+                  <ng-container *ngIf="u.estado_actual === 'Terminada'">
+                    <a class="btn btn-link-primary" title="Editar" [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
+                      <i class="ti ti-pencil"></i>
+                    </a>
+                    <a class="btn btn-link-danger" title="Desbloquear">
+                      <i class="ti ti-lock-open"></i>
+                    </a>
+                  </ng-container>
+
+                  <!-- En Proceso → lápiz -->
+                  <ng-container *ngIf="u.estado_actual === 'En Proceso'">
+                    <a class="btn btn-link-primary" title="Editar" [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
+                      <i class="ti ti-pencil"></i>
+                    </a>
+                  </ng-container>
                 </td>
               </tr>
+
+              <!-- Sin resultados -->
               <tr *ngIf="rutas.length === 0">
                 <td colspan="7" class="text-center text-muted">
                   No hay rutas disponibles.
@@ -75,6 +108,7 @@
             </tbody>
           </table>
         </div>
+
 
       </div>
     </div>
