@@ -1,0 +1,619 @@
+ <div *ngIf="cargando" class="loader-overlay">
+   <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+ </div>
+
+ <div class="container-fluid mt-3" *ngIf="ruta">
+   <!-- Loader Overlay -->
+
+   <!-- KPIs -->
+   <div class="row g-3 mb-4 text-center">
+     <div class="col-md-3">
+       <div class="card shadow-sm border-0 p-4 bg-primary text-white rounded-3">
+         <i class="ti ti-user fs-1 mb-2"></i>
+         <h6 class="mb-1">Vendedor</h6>
+         <h4 class="fw-bold">{{ ruta.nombre_usuario }}</h4>
+       </div>
+     </div>
+
+     <div class="col-md-3">
+       <div class="card shadow-sm border-0 p-4 bg-warning text-dark rounded-3">
+         <i class="ti ti-clock fs-1 mb-2"></i>
+         <h6 class="mb-1">Duración</h6>
+         <h4 class="fw-bold">{{ ruta.duracion }}</h4>
+       </div>
+     </div>
+
+     <div class="col-md-3">
+       <div class="card shadow-sm border-0 p-4 bg-success text-white rounded-3">
+         <i class="ti ti-users fs-1 mb-2"></i>
+         <h6 class="mb-1">Clientes Visitados</h6>
+         <h4 class="fw-bold">0/0</h4>
+       </div>
+     </div>
+
+     <div class="col-md-3">
+       <div class="card shadow-sm border-0 p-4 bg-danger text-white rounded-3">
+         <i class="ti ti-door-exit fs-1 mb-2"></i>
+         <h6 class="mb-1">Clientes Cerrados</h6>
+         <h4 class="fw-bold">0</h4>
+       </div>
+     </div>
+   </div>
+
+   <!-- Layout 30% / 70% -->
+   <div class="row g-3">
+
+     <!-- Columna izquierda (30%) -->
+     <div class="col-md-4">
+       <!-- INFO RUTA -->
+       <div class="card shadow-sm border-0 mb-4">
+         <div class="card-body">
+           <h5 class="fw-bold mb-3">
+             <i class="ti ti-road me-2 text-primary"></i> Información de la Ruta
+           </h5>
+           <p><strong>Folio:</strong> {{ ruta.id_ruta }}</p>
+           <p>
+             <strong>Estado:</strong>
+             <span class="badge" [ngClass]="{
+                    'bg-warning text-dark': ruta.estado_actual === 'En Proceso',
+                    'bg-success': ruta.estado_actual === 'Terminada',
+                    'bg-danger': ruta.estado_actual === 'Cerrada'
+                  }">
+               {{ ruta.estado_actual }}
+             </span>
+           </p>
+           <p *ngIf="ruta.fecha_inicio"><strong>Fecha inicio:</strong> {{ ruta.fecha_inicio | date:'short' }}</p>
+           <p *ngIf="ruta.fecha_fin"><strong>Fecha fin:</strong> {{ ruta.fecha_fin | date:'short' }}</p>
+           <p *ngIf="ruta.fecha_cerrada"><strong>Fecha cerrada:</strong> {{ ruta.fecha_cerrada | date:'short' }}</p>
+         </div>
+       </div>
+
+       <div class="row g-3 mb-4">
+
+         <!-- 🔵 Card: Efectivo y Transferencias -->
+         <div class="col-12">
+           <div class="card shadow-sm border-0">
+             <div class="card-body">
+               <h4 class="fw-bold mb-4 text-center">
+                 <i class="ti ti-wallet me-2 text-success"></i> Efectivo y Transferencias
+               </h4>
+
+               <div class="table-responsive">
+                 <table class="table table-borderless align-middle text-center">
+                   <tbody>
+                     <!-- Ventas efectivo -->
+                     <tr>
+                       <td class="text-start">Ventas efectivo</td>
+                       <td class="fw-bold">
+                         {{ ruta.total_efectivo | currency:'MXN':'symbol':'1.0-0' }}
+                       </td>
+                       <td class="fs-5 text-muted">+</td>
+                     </tr>
+
+                     <!-- Créditos cobrados -->
+                     <tr>
+                       <td class="text-start">Créditos cobrados</td>
+                       <td class="fw-bold">
+                         {{ ruta.total_pagos_creditos_efectivo | currency:'MXN':'symbol':'1.0-0' }}
+                       </td>
+                       <td class="fs-5 text-muted">+</td>
+                     </tr>
+
+                     <!-- Faltante -->
+                     <tr>
+                       <td class="text-start">Faltante</td>
+                       <td class="fw-bold">
+                         {{ faltanteCalculado | currency:'MXN':'symbol':'1.0-0' }}
+                       </td>
+                       <td class="fs-5 text-muted">=</td>
+                     </tr>
+
+                     <!-- A entregar -->
+                     <tr class="bg-success text-white fw-bold">
+                       <td class="text-start">Total a entregar</td>
+                       <td class="fs-5">
+                         {{ (ruta.total_efectivo + ruta.total_pagos_creditos_efectivo + (ruta.dinero_entregado?.total_faltante || 0)) 
+                   | currency:'MXN':'symbol':'1.0-0' }}
+                       </td>
+                       <td></td>
+                     </tr>
+
+                     <!-- Entregado por vendedor -->
+                     <tr>
+                       <td class="text-start">Entregado (vendedor)</td>
+                       <td>
+                         <input type="number" class="form-control text-center fw-bold"
+                           [readonly]="ruta.estado_actual !== 'Terminada'"
+                           [(ngModel)]="ruta.dinero_entregado.total_efectivo"
+                           [value]="ruta.estado_actual === 'Terminada' && ruta.dinero_entregado.total_efectivo === 0 ? '' : ruta.dinero_entregado.total_efectivo">
+                       </td>
+                       <td></td>
+                     </tr>
+
+                     <!-- Transferencias -->
+                     <tr>
+                       <td class="text-start">Transferencias</td>
+                       <td class="fw-bold">
+                         {{ (ruta.total_transferencias + ruta.total_pagos_creditos_transferencias) | currency:'MXN':'symbol':'1.0-0' }}
+                       </td>
+                       <td></td>
+                     </tr>
+
+                     <!-- Transferencias entregadas -->
+                     <tr>
+                       <td class="text-start">Transferencias (vendedor)</td>
+                       <td>
+                         <input type="number" class="form-control text-center fw-bold"
+                           [readonly]="ruta.estado_actual !== 'Terminada'"
+                           [(ngModel)]="ruta.dinero_entregado.total_transferencias"
+                           [value]="ruta.estado_actual === 'Terminada' && ruta.dinero_entregado.total_transferencias === 0 ? '' : ruta.dinero_entregado.total_transferencias">
+                       </td>
+
+                       <td></td>
+                     </tr>
+                   </tbody>
+                 </table>
+               </div>
+             </div>
+           </div>
+         </div>
+
+
+         <!-- 🔵 Card: Resumen Total de Ventas -->
+         <div class="col-12">
+           <div class="card shadow-sm border-0">
+             <div class="card-body">
+               <h4 class="fw-bold mb-4 text-center">
+                 <i class="ti ti-report-money me-2 text-primary"></i> Resumen Total de Ventas
+               </h4>
+
+               <!-- Ventas efectivo -->
+               <div class="d-flex justify-content-between align-items-center mb-3">
+                 <span class="text-muted">Ventas efectivo</span>
+                 <span class="fw-bold">{{ ruta.total_efectivo | currency:'MXN':'symbol':'1.0-0' }}</span>
+               </div>
+
+               <!-- Ventas transferencias -->
+               <div class="d-flex justify-content-between align-items-center mb-3">
+                 <span class="text-muted">Ventas transferencias</span>
+                 <span class="fw-bold">{{ ruta.total_transferencias | currency:'MXN':'symbol':'1.0-0' }}</span>
+               </div>
+
+               <!-- Ventas crédito -->
+               <div class="d-flex justify-content-between align-items-center mb-4">
+                 <span class="text-muted">Ventas crédito</span>
+                 <span class="fw-bold">{{ ruta.total_credito | currency:'MXN':'symbol':'1.0-0' }}</span>
+               </div>
+
+               <!-- Total Ruta -->
+               <div class="border-top pt-3 mt-3 d-flex justify-content-between align-items-center">
+                 <span class="fw-bold fs-4 text-dark">Total Ruta</span>
+                 <span class="fw-bold fs-2 text-primary">
+                   {{ (ruta.total_credito + ruta.total_efectivo + ruta.total_transferencias + ruta.total_tarjeta + ruta.total_pagos_creditos_efectivo) 
+             | currency:'MXN':'symbol':'1.0-0' }}
+                 </span>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+
+     <!-- Columna derecha (70%) -->
+     <div class="col-md-8">
+       <!-- EXISTENCIAS -->
+       <div class="card shadow-sm border-0 mb-4">
+         <div class="card-body">
+           <h5 class="fw-bold mb-3">
+             <i class="ti ti-package me-2 text-secondary"></i>Existencias
+           </h5>
+           <div class="table-responsive">
+             <table class="table table-hover align-middle">
+               <thead class="table-light">
+                 <tr>
+                   <th>Producto</th>
+                   <th>Inicial</th>
+                   <th>Ventas</th>
+                   <th>Devoluciones</th>
+                   <th>Final</th>
+                   <th>Real</th>
+                   <th>Diferencia</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <!-- 👉 Inventario en API si la ruta NO está cerrada -->
+                 <ng-container *ngIf="ruta.estado_actual !== 'Cerrada'; else cerrada">
+                   <tr *ngFor="let d of productosInventario">
+                     <!-- Foto del producto -->
+                     <td class="fw-semibold d-flex align-items-center">
+                       <img [src]="d.imagen_url || 'assets/images/no_img.jpg'" alt="producto"
+                         class="me-2 rounded border" style="width:40px; height:40px; object-fit:cover;"
+                         (error)="onImgError($event)">
+                       {{ d.nombre_producto }}
+                     </td>
+
+                     <!-- Cantidades centradas -->
+                     <td class="text-center">{{ d.stock?.existencia_inicial }}</td>
+                     <td class="text-center">{{ d.stock?.total_vendido }}</td>
+                     <td class="text-center">{{ d.stock?.total_devoluciones }}</td>
+                     <td class="text-center">{{ d.stock?.existencia_final }}</td>
+
+                     <!-- Real -->
+                     <td class="text-center">
+                       <!-- Terminada → input -->
+                       <ng-container *ngIf="ruta.estado_actual === 'Terminada'; else realTexto">
+                         <input type="number" class="form-control text-center" [(ngModel)]="d.stock.existencia_real">
+                       </ng-container>
+                       <ng-template #realTexto>
+                         <!-- En proceso → "-" -->
+                         <span *ngIf="ruta.estado_actual === 'En Proceso'">-</span>
+                         <span
+                           *ngIf="ruta.estado_actual !== 'En Proceso'">{{ d.stock?.existencia_real ?? d.stock?.existencia_final }}</span>
+                       </ng-template>
+                     </td>
+
+                     <!-- Diferencia -->
+                     <td class="text-center">
+                       <ng-container *ngIf="ruta.estado_actual === 'Terminada'">
+                         {{ d.stock?.existencia_final - (d.stock?.existencia_real || 0) }}
+                       </ng-container>
+                       <ng-container *ngIf="ruta.estado_actual === 'Cerrada'">
+                         {{ d.stock?.existencia_final - (d.stock?.existencia_real || 0) }}
+                       </ng-container>
+                       <ng-container *ngIf="ruta.estado_actual === 'En Proceso'">
+                         -
+                       </ng-container>
+                     </td>
+                   </tr>
+                 </ng-container>
+
+                 <!-- 👉 Si la ruta está Cerrada, usar detalles guardados -->
+                 <ng-template #cerrada>
+                   <tr *ngFor="let d of ruta.detalles">
+                     <td class="fw-semibold d-flex align-items-center">
+                       <img [src]="d.imagen_url || 'assets/images/no_img.jpg'" alt="producto"
+                         class="me-2 rounded border" style="width:40px; height:40px; object-fit:cover;"
+                         (error)="onImgError($event)">
+                       {{ d.nombre_producto }}
+                     </td>
+
+                     <td class="text-center">{{ d.existencia_inicial }}</td>
+                     <td class="text-center">{{ d.ventas }}</td>
+                     <td class="text-center">{{ d.devoluciones }}</td>
+                     <td class="text-center">{{ d.existencia_real }}</td>
+
+                     <!-- Real -->
+                     <td class="text-center">
+                       <ng-container *ngIf="ruta.estado_actual === 'Terminada'; else realTextoCerrada">
+                         <input type="number" class="form-control text-center" [(ngModel)]="d.existencia_real">
+                       </ng-container>
+                       <ng-template #realTextoCerrada>
+                         <span *ngIf="ruta.estado_actual === 'En Proceso'">-</span>
+                         <span *ngIf="ruta.estado_actual !== 'En Proceso'">{{ d.existencia_real }}</span>
+                       </ng-template>
+                     </td>
+
+                     <!-- Diferencia -->
+                     <td class="text-center">
+                       <ng-container *ngIf="ruta.estado_actual === 'Terminada'">
+                         {{ d.existencia_real !== null ? (d.existencia_real - d.existencia_real) : '-' }}
+                       </ng-container>
+                       <ng-container *ngIf="ruta.estado_actual === 'Cerrada'">
+                         {{ d.existencia_real !== null ? (d.existencia_real - d.existencia_real) : '-' }}
+                       </ng-container>
+                       <ng-container *ngIf="ruta.estado_actual === 'En Proceso'">
+                         -
+                       </ng-container>
+                     </td>
+                   </tr>
+                 </ng-template>
+               </tbody>
+             </table>
+           </div>
+         </div>
+       </div>
+
+
+       <!-- VISITAS -->
+       <div class="card shadow-sm border-0">
+         <div class="card-body">
+           <h5 class="fw-bold mb-3">
+             <i class="ti ti-users me-2 text-secondary"></i>Visitas
+           </h5>
+
+           <!-- Filtros -->
+           <div class="row g-2 mb-3">
+             <div class="col-md-4">
+               <input type="text" class="form-control" placeholder="Buscar cliente..." [(ngModel)]="filtros.cliente">
+             </div>
+             <div class="col-md-4">
+               <select class="form-select" [(ngModel)]="filtros.clasificacion">
+                 <option value="">Todas las clasificaciones</option>
+                 <option *ngFor="let c of clasificaciones" [value]="c.nombre_clasificacion">{{ c.nombre_clasificacion }}
+                 </option>
+               </select>
+             </div>
+             <div class="col-md-4">
+               <select class="form-select" [(ngModel)]="filtros.metodo">
+                 <option value="">Todos los métodos</option>
+                 <option value="Efectivo">Efectivo</option>
+                 <option value="Crédito">Crédito</option>
+                 <option value="Transferencia">Transferencia</option>
+               </select>
+             </div>
+           </div>
+
+           <!-- Contador -->
+           <div class="mb-2">
+             <span class="badge bg-secondary fs-6">
+               {{ visitasFiltradas.length }} visitas
+             </span>
+           </div>
+
+           <!-- Tabla -->
+           <div class="table-responsive">
+             <table class="table table-hover align-middle">
+               <thead class="table-light">
+                 <tr>
+                   <th>#</th>
+                   <th>Cliente</th>
+                   <th>Clasificación</th>
+                   <th>Fecha</th>
+                   <th>Venta</th>
+                   <th>Método</th>
+                   <th>Pagos Créd.</th>
+                   <th>Ubicación</th>
+                   <th>Acciones</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr *ngFor="let v of visitasFiltradas">
+                   <td>{{ v.id_visita }}</td>
+                   <td class="fw-semibold">
+                     {{ v.nombre_cliente }}
+                     <div class="mt-1 text-muted small">
+                       <div>
+                         <i class="ti ti-phone me-1"></i>
+                         <a [href]="'tel:' + v.telefono" class="text-muted text-decoration-none">
+                           {{ v.telefono }}
+                         </a>
+                       </div>
+                       <div>
+                         <i class="ti ti-map-pin me-1"></i>
+                         <a [href]="'https://www.google.com/maps/search/?api=1&query=' + v.calle + ',' + v.ciudad"
+                           target="_blank" class="text-muted text-decoration-none">
+                           {{ v.calle }}, {{ v.ciudad }}
+                         </a>
+                       </div>
+                     </div>
+                   </td>
+
+                   <td>
+                     <span class="badge fw-semibold" [ngStyle]="{
+            'background-color': v.color,
+            'color': '#fff',
+            'border-radius': '12px',
+            'padding': '2px 8px',
+            'font-size': '0.75rem',
+            'box-shadow': '0 1px 3px rgba(0,0,0,0.15)'
+          }">
+                       {{ v.nombre_clasificacion }}
+                     </span>
+                   </td>
+
+                   <td>{{ v.fecha_registro | date:'short' }}</td>
+
+                   <td class="fw-bold text-primary">
+                     {{ v.ventas[0]?.total | currency:'MXN':'symbol':'1.0-0' }}
+                   </td>
+
+                   <td>
+                     <span *ngIf="v.ventas[0]?.pagos[0]?.metodo_pago" class="badge fw-semibold" [ngStyle]="{
+            'background-color': v.ventas[0]?.pagos[0]?.metodo_pago === 'Efectivo' ? '#28a745' : 
+                                v.ventas[0]?.pagos[0]?.metodo_pago === 'Crédito' ? '#ba0006' : 
+                                v.ventas[0]?.pagos[0]?.metodo_pago === 'Transferencia' ? '#0d6efd' : '#6c757d',
+            'color': '#fff',
+            'border-radius': '12px',
+            'padding': '2px 8px',
+            'font-size': '0.75rem',
+            'box-shadow': '0 1px 3px rgba(0,0,0,0.15)'
+          }">
+                       {{ v.ventas[0]?.pagos[0]?.metodo_pago }}
+                     </span>
+                   </td>
+
+                   <td class="fw-bold text-danger">
+                     {{ v.total_pagos_creditos | currency:'MXN':'symbol':'1.0-0' }}
+                   </td>
+
+                   <td>
+                     <ng-container
+                       *ngIf="v.latitud && v.longitud && v.latitud !== 0 && v.longitud !== 0; else sinUbicacion">
+                       <button class="btn btn-sm btn-outline-primary" (click)="verUbicacion(v)">
+                         <i class="ti ti-map-pin"></i> Ver
+                       </button>
+                     </ng-container>
+                     <ng-template #sinUbicacion>
+                       <span class="text-muted">-</span>
+                     </ng-template>
+                   </td>
+
+
+                   <td>
+                     <ng-container *ngIf="v.id_visita">
+                       <button class="btn btn-sm btn-outline-danger" (click)="cancelarVisita(v)"
+                         title="Cancelar visita">
+                         <i class="ti ti-x"></i>
+                       </button>
+
+                       <button class="btn btn-sm btn-outline-primary" (click)="verVenta(v)" title="Ver venta">
+                         <i class="ti ti-shopping-cart"></i>
+                       </button>
+                     </ng-container>
+                   </td>
+
+                 </tr>
+               </tbody>
+
+               <tfoot class="table-light">
+                 <tr>
+                   <td colspan="4" class="text-end fw-bold">Total:</td>
+                   <td class="fw-bold text-primary">
+                     {{ totalVentasFiltradas | currency:'MXN':'symbol':'1.0-0' }}
+                   </td>
+                   <td></td>
+                   <td class="fw-bold text-danger">
+                     {{ totalPagosCreditos | currency:'MXN':'symbol':'1.0-0' }}
+                   </td>
+                   <td></td>
+                   <td></td>
+                 </tr>
+               </tfoot>
+             </table>
+           </div>
+
+
+         </div>
+       </div>
+
+     </div>
+
+     <!-- Card con botón de Cerrar -->
+     <div class="card shadow-sm border-0 mt-4" *ngIf="ruta?.estado_actual === 'Terminada'">
+       <div class="card-body text-center">
+         <button class="btn btn-danger btn-lg w-100 py-3 fs-4" (click)="cerrarRuta()">
+           <i class="ti ti-lock me-2"></i> Cerrar Ruta
+         </button>
+       </div>
+     </div>
+   </div>
+   <!-- Modal Ver Ubicación -->
+   <div class="modal fade" id="modalUbicacion" tabindex="-1" aria-labelledby="modalUbicacionLabel" aria-hidden="true">
+     <div class="modal-dialog modal-lg modal-dialog-centered">
+       <div class="modal-content border-0 shadow-lg rounded-3 bg-white">
+
+         <!-- Header (blanco y simple) -->
+         <div class="modal-header border-0">
+           <h5 class="modal-title fw-bold text-dark" id="modalUbicacionLabel">
+             <i class="ti ti-map-pin me-2 text-primary"></i> Ubicación de la Visita
+           </h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+         </div>
+
+         <!-- Body -->
+         <div class="modal-body">
+           <div class="row g-3 mb-3 text-center">
+             <div class="col-md-6">
+               <div class="p-3 bg-light rounded shadow-sm">
+                 <p class="mb-1 text-muted"><i class="ti ti-navigation"></i> Latitud</p>
+                 <h6 class="fw-bold text-dark">{{ visitaSeleccionada?.latitud }}</h6>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="p-3 bg-light rounded shadow-sm">
+                 <p class="mb-1 text-muted"><i class="ti ti-navigation-north"></i> Longitud</p>
+                 <h6 class="fw-bold text-dark">{{ visitaSeleccionada?.longitud }}</h6>
+               </div>
+             </div>
+           </div>
+
+           <!-- Mapa -->
+           <div class="ratio ratio-16x9 shadow-sm rounded overflow-hidden">
+             <iframe *ngIf="mapaUrl" [src]="mapaUrl" loading="lazy" allowfullscreen></iframe>
+           </div>
+         </div>
+
+         <!-- Footer -->
+         <div class="modal-footer border-0">
+           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+             <i class="ti ti-x"></i> Cerrar
+           </button>
+         </div>
+       </div>
+     </div>
+   </div>
+
+
+   <!-- Modal Ver Venta -->
+   <div class="modal fade" id="ventaModal" tabindex="-1" aria-labelledby="ventaModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title fw-bold" id="ventaModalLabel">
+             <i class="ti ti-shopping-cart me-2"></i>Detalles de la Venta
+           </h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+         </div>
+         <div class="modal-body">
+           <div *ngIf="ventaSeleccionada?.detalles?.length > 0; else sinDetalles">
+             <table class="table align-middle table-bordered rounded-3 overflow-hidden">
+               <thead class="bg-light">
+                 <tr class="border-0">
+                   <th class="border-0">#</th>
+                   <th class="border-0" style="width: 30%">Producto</th>
+                   <th class="border-0 text-center">Cantidad</th>
+                   <th class="border-0 text-end">P. Unitario</th>
+                   <th class="border-0 text-end">Total</th>
+                   <th class="border-0 text-center">Acciones</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr *ngFor="let d of ventaSeleccionada.detalles; let i = index">
+                   <td>{{ i + 1 }}</td>
+                   <td>
+                     <select class="form-select form-select-sm" [(ngModel)]="d.producto"
+                       (ngModelChange)="onProductoChange(d)">
+                       <option [ngValue]="null">Seleccione un producto</option>
+                       <option *ngFor="let p of productosInventarioCliente" [ngValue]="p.id_producto">
+                         {{ p.nombre_producto }}
+                       </option>
+                     </select>
+                   </td>
+                   <td class="text-center">
+                     <input type="number" min="1" [(ngModel)]="d.cantidad"
+                       class="form-control form-control-sm text-center" (change)="recalcularDetalle(d)">
+                   </td>
+                   <td class="text-end">{{ d.precio_unitario | currency:'MXN':'symbol':'1.0-0' }}</td>
+                   <td class="fw-bold text-end text-primary">{{ d.total | currency:'MXN':'symbol':'1.0-0' }}</td>
+                   <td class="text-center">
+                     <button class="btn btn-sm btn-outline-danger" (click)="eliminarDetalle(i)">
+                       <i class="ti ti-trash"></i>
+                     </button>
+                   </td>
+                 </tr>
+               </tbody>
+               <tfoot>
+                 <tr class="table-light">
+                   <td colspan="4" class="text-end fw-bold">Gran Total:</td>
+                   <td class="fw-bold text-primary text-end">
+                     {{ granTotal | currency:'MXN':'symbol':'1.0-0' }}
+                   </td>
+                   <td></td>
+                 </tr>
+               </tfoot>
+             </table>
+             <div class="mt-3 text-end">
+               <button class="btn btn-sm btn-outline-primary" (click)="agregarDetalle()">
+                 <i class="ti ti-plus"></i> Agregar Producto
+               </button>
+             </div>
+           </div>
+           <ng-template #sinDetalles>
+             <div class="text-center text-muted">No hay detalles disponibles</div>
+           </ng-template>
+         </div>
+
+         <!-- Footer con botones -->
+         <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" (click)="cancelarCambios()" data-bs-dismiss="modal">
+             Cancelar
+           </button>
+           <button type="button" class="btn btn-success" (click)="guardarCambios()" data-bs-dismiss="modal">
+             Guardar
+           </button>
+         </div>
+       </div>
+     </div>
+   </div>
+
+ </div>

@@ -1,0 +1,18 @@
+.avatar-iniciales {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dee2e6;
+  color: #495057;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 0.8rem;
+}
+
+select option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

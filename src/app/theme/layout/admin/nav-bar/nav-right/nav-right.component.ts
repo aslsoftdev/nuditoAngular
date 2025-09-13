@@ -20,6 +20,7 @@ interface MensajeConteoVentasPendientes {
 })
 export class NavRightComponent implements OnInit, OnDestroy {
   nombreUsuario = '';
+  imagenUrl = '';
   conteo = 0;
   private intervalId: ReturnType<typeof setInterval> | undefined;
 
@@ -28,6 +29,7 @@ export class NavRightComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Leer el nombre de usuario guardado tras el login
     this.nombreUsuario = localStorage.getItem('nombre_usuario') || '';
+    this.imagenUrl = localStorage.getItem('imagen_url') || '';
     this.obtenerConteoVentasPendientes();
     
     // Ejecutar cada 10 segundos
@@ -47,6 +49,7 @@ export class NavRightComponent implements OnInit, OnDestroy {
     // Limpiar localStorage (puedes borrar solo lo necesario)
     localStorage.removeItem('id_usuario');
     localStorage.removeItem('nombre_usuario');
+    localStorage.removeItem('imagen_url');
     // Redirigir al login
     this.router.navigate(['/login']);
   }

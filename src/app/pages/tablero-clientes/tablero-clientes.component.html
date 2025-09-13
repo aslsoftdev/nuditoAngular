@@ -1,132 +1,109 @@
 <div class="row mt-2">
-    <div class="col-sm-12">
-        <div class="card shadow-sm border-0">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Tablero de clientes</h5>
+      </div>
 
-            <!-- Header -->
-            <div class="card-header pb-2 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    Tablero de clientes
-                </h5>
+      <!-- Loader -->
+      <div *ngIf="cargandoVendedores" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-6">
+        <!-- Buscador -->
+        <div class="row justify-content-center mb-4">
+          <div class="col-md-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="busqueda"
+                (keyup.enter)="onBuscar()" />
+              <button class="btn btn-outline-secondary" type="button" (click)="onBuscar()">
+                <i class="ti ti-search"></i>
+              </button>
             </div>
-
-            <!-- Loader Overlay -->
-            <div *ngIf="cargandoVendedores" class="loader-overlay">
-                <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
-            </div>
-
-            <!-- Body -->
-            <div class="card-body pt-6">
-
-                <!-- Buscador -->
-                <div class="row justify-content-center mb-4">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Buscar por nombre..."
-                                [(ngModel)]="busqueda" (keyup.enter)="onBuscar()" />
-                            <button class="btn btn-outline-secondary" type="button" (click)="onBuscar()">
-                                <i class="ti ti-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SHIMMER -->
-                <div *ngIf="cargandoClientes || cargandoVendedores" class="shimmer-container">
-                    <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
-                        <div class="placeholder-col" *ngFor="let __ of [1,2,3,4,5,6]"></div>
-                    </div>
-                </div>
-
-                <!-- TABLA -->
-                <div class="table-responsive" *ngIf="!cargandoClientes && !cargandoVendedores">
-                    <table class="table table-hover bg-white">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Cliente</th>
-                                <th>Lunes</th>
-                                <th>Martes</th>
-                                <th>Miércoles</th>
-                                <th>Jueves</th>
-                                <th>Viernes</th>
-                                <th>Sábado</th>
-                                <th>Domingo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let cliente of tablerosClientes">
-                                <td>{{ cliente.id_cliente }}</td>
-                                <td>{{ cliente.nombre_cliente }}</td>
-                                <td>
-                                    <select [(ngModel)]="cliente.agente_lunes"
-                                        (change)="onAgenteChange(cliente, 'agente_lunes', cliente.agente_lunes)"
-                                        class="form-select form-select-sm">
-                                        <option [ngValue]="null"> Sin asignar </option>
-                                        <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor.id_usuario">{{
-                                            vendedor.nombre_usuario }}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select [(ngModel)]="cliente.agente_martes"
-                                        (change)="onAgenteChange(cliente, 'agente_martes', cliente.agente_martes)"
-                                        class="form-select form-select-sm">
-                                        <option [ngValue]="null"> Sin asignar </option>
-                                        <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor.id_usuario">{{
-                                            vendedor.nombre_usuario }}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select [(ngModel)]="cliente.agente_miercoles"
-                                        (change)="onAgenteChange(cliente, 'agente_miercoles', cliente.agente_miercoles)"
-                                        class="form-select form-select-sm">
-                                        <option [ngValue]="null"> Sin asignar </option>
-                                        <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor.id_usuario">{{
-                                            vendedor.nombre_usuario }}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select [(ngModel)]="cliente.agente_jueves"
-                                        (change)="onAgenteChange(cliente, 'agente_jueves', cliente.agente_jueves)"
-                                        class="form-select form-select-sm">
-                                        <option [ngValue]="null"> Sin asignar </option>
-                                        <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor.id_usuario">{{
-                                            vendedor.nombre_usuario }}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select [(ngModel)]="cliente.agente_viernes"
-                                        (change)="onAgenteChange(cliente, 'agente_viernes', cliente.agente_viernes)"
-                                        class="form-select form-select-sm">
-                                        <option [ngValue]="null"> Sin asignar </option>
-                                        <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor.id_usuario">{{
-                                            vendedor.nombre_usuario }}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select [(ngModel)]="cliente.agente_sabado"
-                                        (change)="onAgenteChange(cliente, 'agente_sabado', cliente.agente_sabado)"
-                                        class="form-select form-select-sm">
-                                        <option [ngValue]="null"> Sin asignar </option>
-                                        <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor.id_usuario">{{
-                                            vendedor.nombre_usuario }}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select [(ngModel)]="cliente.agente_domingo"
-                                        (change)="onAgenteChange(cliente, 'agente_domingo', cliente.agente_domingo)"
-                                        class="form-select form-select-sm">
-                                        <option [ngValue]="null"> Sin asignar </option>
-                                        <option *ngFor="let vendedor of vendedores" [ngValue]="vendedor.id_usuario">{{
-                                            vendedor.nombre_usuario }}</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-
+          </div>
         </div>
+
+        <!-- SHIMMER -->
+        <div *ngIf="cargandoClientes || cargandoVendedores" class="shimmer-container">
+          <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+            <div class="placeholder-col" *ngFor="let __ of [1,2,3,4,5,6]"></div>
+          </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-responsive" *ngIf="!cargandoClientes && !cargandoVendedores">
+          <table class="table table-hover bg-white">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Sábado</th>
+                <th>Domingo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cliente of tablerosClientes">
+                <td>{{ cliente.id_cliente }}</td>
+                <td>{{ cliente.nombre_cliente }}</td>
+
+                <!-- Días -->
+                <td *ngFor="let dia of ['lunes','martes','miercoles','jueves','viernes','sabado','domingo']"
+                  (click)="activarEdicion(cliente, 'agente_' + dia)" class="editable-cell text-center">
+
+                  <!-- Vista normal -->
+                  <ng-container *ngIf="!cliente['editando_agente_' + dia]; else editSelect">
+                    <ng-container *ngIf="cliente['agente_' + dia]; else sinAsignar">
+                      <img [src]="obtenerFotoVendedor(cliente['agente_' + dia])" class="rounded-circle" width="32"
+                        height="32" alt="Foto" (error)="onImageError($event, cliente['agente_' + dia])" />
+                      <span *ngIf="!tieneFoto(cliente['agente_' + dia])" class="avatar-iniciales">
+                        {{ obtenerInicialesVendedor(cliente['agente_' + dia]) }}
+                      </span>
+                    </ng-container>
+                    <ng-template #sinAsignar>
+                      <i class="ti ti-plus text-muted fs-5"></i>
+                    </ng-template>
+                  </ng-container>
+                  <!-- Vista edición -->
+                  <ng-template #editSelect>
+                    <ng-select [(ngModel)]="cliente['agente_' + dia]" (change)="guardarCambio(cliente, 'agente_' + dia)"
+                      [items]="vendedores" bindLabel="nombre_usuario" bindValue="id_usuario" [clearable]="true"
+                      placeholder="Sin asignar" class="form-select-sm">
+
+                      <!-- plantilla para el valor seleccionado -->
+                      <ng-template ng-label-tmp let-item="item">
+                        <img [src]="item.imagen_url" class="rounded-circle me-1" width="28" height="28" alt="Foto" />
+                      </ng-template>
+
+                      <!-- plantilla para cada opción -->
+                      <ng-template ng-option-tmp let-item="item">
+                        <div class="d-flex align-items-center">
+                          <img [src]="item.imagen_url" class="rounded-circle me-2" width="28" height="28" alt="Foto" />
+                          <span class="text-start">
+                            {{ item.nombre_usuario.split(' ')[0] }}
+                          </span>
+                        </div>
+                      </ng-template>
+
+                    </ng-select>
+                  </ng-template>
+
+
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

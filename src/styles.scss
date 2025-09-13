@@ -8,6 +8,10 @@ File: style.css
 =========================================================================
 =================================================================================== */
 
+body {
+  font-family: 'Poppins', sans-serif !important;
+}
+
 // custom
 $primary-color: #0d6efd;
 $primary-hover: #084298;
@@ -49,6 +53,8 @@ $danger-hover: #c62828;
 @import 'scss/fonts/phosphor/duotone/style.css';
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import 'ngx-toastr/toastr';
+
 .btn-link {
   background-color: transparent;
   border: none;

@@ -14,4 +14,5 @@ export interface Vendedor {
   puesto_trabajo:     number;
   ubicacion_almacen:  number;
   cliente:            number;
+  imagen_url:         string;
 }

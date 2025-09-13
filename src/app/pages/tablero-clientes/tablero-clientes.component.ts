@@ -6,6 +6,9 @@ import { API_ENDPOINTS } from 'src/app/core/config/constants';
 import Swal from 'sweetalert2';
 
 import { Vendedor } from 'src/app/core/models/vendedor.model';
+import { NgSelectModule } from '@ng-select/ng-select';
+
+import { ToastrService } from 'ngx-toastr';
 
 interface ActualizarAgenteResponse {
   status: boolean;
@@ -21,74 +24,93 @@ interface ConsultaVendedorResponses {
 interface TablerosClientesResponse {
   status: boolean;
   message?: string;
-  clientes: Tableros[]; // Define el tipo de datos según tu necesidad
+  clientes: Tableros[];
 }
 
 interface Tableros {
   id_cliente: number;
   nombre_cliente: string;
-  agente_lunes: number;
-  agente_martes: number;
-  agente_miercoles: number;
-  agente_jueves: number;
-  agente_viernes: number;
-  agente_sabado: number;
-  agente_domingo: number;
+  agente_lunes: number | null;
+  agente_martes: number | null;
+  agente_miercoles: number | null;
+  agente_jueves: number | null;
+  agente_viernes: number | null;
+  agente_sabado: number | null;
+  agente_domingo: number | null;
+  // flags de edición dinámica
+  editando_agente_lunes: boolean;
+  editando_agente_martes: boolean;
+  editando_agente_miercoles: boolean;
+  editando_agente_jueves: boolean;
+  editando_agente_viernes: boolean;
+  editando_agente_sabado: boolean;
+  editando_agente_domingo: boolean;
 }
 
 @Component({
   selector: 'app-tablero-clientes',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, NgSelectModule],
   templateUrl: './tablero-clientes.component.html',
   styleUrl: './tablero-clientes.component.scss'
 })
 export class TableroClientesComponent implements OnInit {
-  vendedores: Vendedor [] = [];
+  vendedores: Vendedor[] = [];
   tablerosClientes: Tableros[] = [];
   tablerosClientesOriginal: Tableros[] = [];
   cargandoClientes = false;
   cargandoVendedores = false;
   busqueda = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, 
+              private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.obtenerTableroClientes();
     this.obtenerVendedores();
   }
 
- onBuscar() {
-  this.cargandoClientes = true;
-  const texto = this.busqueda.trim().toLowerCase();
-  
-  setTimeout(() => {
-    if (!texto) {
-      this.tablerosClientes = [...this.tablerosClientesOriginal];
-    } else {
-      this.tablerosClientes = this.tablerosClientesOriginal.filter(cliente =>
-        cliente.nombre_cliente.toLowerCase().includes(texto)
-      );
-    }
-    this.cargandoClientes = false;
-  }, 500); // 500ms para ver la animación
-}
+  onBuscar() {
+    this.cargandoClientes = true;
+    const texto = this.busqueda.trim().toLowerCase();
+
+    setTimeout(() => {
+      if (!texto) {
+        this.tablerosClientes = [...this.tablerosClientesOriginal];
+      } else {
+        this.tablerosClientes = this.tablerosClientesOriginal.filter(cliente =>
+          cliente.nombre_cliente.toLowerCase().includes(texto)
+        );
+      }
+      this.cargandoClientes = false;
+    }, 300);
+  }
 
   obtenerTableroClientes(): void {
     this.cargandoClientes = true;
     this.http.post<TablerosClientesResponse>(API_ENDPOINTS.obtenerTableroClientes, {}).subscribe({
       next: (response) => {
         if (response.status) {
-          this.cargandoClientes = false;
-          this.tablerosClientes = response.clientes;
+          this.tablerosClientes = response.clientes.map(c => ({
+            ...c,
+            editando_agente_lunes: false,
+            editando_agente_martes: false,
+            editando_agente_miercoles: false,
+            editando_agente_jueves: false,
+            editando_agente_viernes: false,
+            editando_agente_sabado: false,
+            editando_agente_domingo: false,
+          }));
           this.tablerosClientesOriginal = response.clientes;
         } else {
           Swal.fire('Error', response.message || 'No se pudieron cargar los clientes', 'error');
         }
+        this.cargandoClientes = false;
       },
       error: () => {
         this.cargandoClientes = false;
       }
-    })
+    });
   }
 
   obtenerVendedores(): void {
@@ -102,32 +124,62 @@ export class TableroClientesComponent implements OnInit {
         this.vendedores = [];
         this.cargandoVendedores = false;
       }
-    })
+    });
   }
 
-  
-  mensaje = '';
-  tipoMensaje: 'success' | 'error' = 'success';
+  activarEdicion(cliente: Tableros, campo: string) {
+    // cierra otros campos
+    (Object.keys(cliente) as Array<keyof Tableros>).forEach(k => {
+      if (k.startsWith('editando_')) {
+        (cliente as any)[k] = false;
+      }
+    });
 
-  onAgenteChange(cliente: unknown, campo: string, nuevoId: unknown) {
+    (cliente as any)[`editando_${campo}`] = true;
+  }
 
-  cliente[campo] = nuevoId;
+  guardarCambio(cliente: Tableros, campo: string) {
+    (cliente as any)[`editando_${campo}`] = false;
 
-    this.http.post<ActualizarAgenteResponse>(API_ENDPOINTS.actualizarTableroCliente, { clientes: [cliente] }).subscribe({
+    this.http.post<ActualizarAgenteResponse>(
+      API_ENDPOINTS.actualizarTableroCliente,
+      { clientes: [cliente] }
+    ).subscribe({
       next: (response) => {
-        this.tipoMensaje = response.status ? 'success' : 'error';
-      this.mensaje = response.message;
-      setTimeout(() => this.mensaje = '', 3000);
+        if (response.status) {
+          this.toastr.success('Agente actualizado con éxito');
+        } else {
+          this.toastr.error(response.message || 'No se pudo actualizar');
+        }
       },
       error: () => {
-             this.tipoMensaje = 'error';
-      this.mensaje = 'No se pudo actualizar el cliente';
-      setTimeout(() => this.mensaje = '', 3000);
+        this.toastr.error('No se pudo actualizar el cliente');
       }
-    })
+    });
+  }
 
-  // Aquí puedes hacer una petición HTTP para guardar el cambio en el backend si lo necesitas.
-  // Por ejemplo:
-  // this.miServicio.actualizarAgente(cliente.id_cliente, campo, nuevoId).subscribe(...);
-}
+  tieneFoto(id: number | null): boolean {
+    if (!id) return false;
+    const vendedor = this.vendedores.find(v => v.id_usuario === id);
+    return !!(vendedor && vendedor.imagen_url);
+  }
+
+  obtenerFotoVendedor(id: number | null): string {
+    if (!id) return '';
+    const vendedor = this.vendedores.find(v => v.id_usuario === id);
+    return vendedor?.imagen_url || '';
+  }
+
+  obtenerInicialesVendedor(id: number | null): string {
+    if (!id) return '';
+    const vendedor = this.vendedores.find(v => v.id_usuario === id);
+    if (!vendedor) return '';
+    const partes = vendedor.nombre_usuario.split(' ');
+    return (partes[0][0] + (partes[1]?.[0] || '')).toUpperCase();
+  }
+
+  onImageError(event: Event, id: number) {
+    (event.target as HTMLImageElement).style.display = 'none';
+  }
+
 }

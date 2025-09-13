@@ -65,6 +65,8 @@ export class LoginComponent implements OnInit {
             // guardamos id y nombre
             localStorage.setItem('id_usuario',    res.id_usuario.toString());
             localStorage.setItem('nombre_usuario', res.nombre_usuario);
+            localStorage.setItem('imagen_url', res.imagen_url);
+            
             // redirigimos
             this.router.navigate(['/default']);
           } else {

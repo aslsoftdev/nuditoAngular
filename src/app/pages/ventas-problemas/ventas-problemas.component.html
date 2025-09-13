@@ -1,0 +1,70 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Ventas con Problemas</h5>
+
+        <!-- Buscador -->
+        <div class="input-group w-50">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar por cliente o venta..."
+            [(ngModel)]="busqueda"
+            (keyup.enter)="obtenerVentasProblemas()" />
+          <button class="btn btn-outline-secondary" type="button" (click)="obtenerVentasProblemas()">
+            <i class="ti ti-refresh"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body pt-2">
+        <!-- SHIMMER -->
+        <div *ngIf="cargando" class="shimmer-container">
+          <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+            <div class="placeholder-col" *ngFor="let __ of [1,2,3,4,5,6]"></div>
+          </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-responsive" *ngIf="!cargando">
+          <table class="table table-hover bg-white">
+            <thead class="table-light">
+              <tr>
+                <th># Venta</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Fecha Venta</th>
+                <th>ID Odoo</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of ventasFiltradas">
+                <td>{{ v.id_venta }}</td>
+                <td>{{ v.nombre_cliente }}</td>
+                <td class="fw-bold text-primary">
+                  {{ v.total | currency:'MXN':'symbol':'1.2-2' }}
+                </td>
+                <td>{{ v.fecha_registro }}</td>
+                <td>{{ v.id_odoo || '-' }}</td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-danger"
+                          (click)="liberarVenta(v)"
+                          title="Liberar venta">
+                    <i class="ti ti-unlink"></i> Liberar
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="ventasFiltradas.length === 0">
+                <td colspan="6" class="text-center text-muted">
+                  No hay ventas con problemas.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

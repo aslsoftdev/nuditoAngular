@@ -51,11 +51,11 @@ const routes: Routes = [
       },
       {
         path: 'lista-rutas/nuevo',
-        loadComponent: () => import('./pages/lista-rutas/lista-rutas-form/lista-rutas-form.component').then(m => m.ListaRutasFormComponent)
+        loadComponent: () => import('./pages/lista-rutas/ruta/ruta.component').then(m => m.ListaRutasFormComponent)
       },
       {
         path: 'lista-rutas/editar/:id',
-        loadComponent: () => import('./pages/lista-rutas/lista-rutas-form/lista-rutas-form.component').then(m => m.ListaRutasFormComponent)
+        loadComponent: () => import('./pages/lista-rutas/ruta/ruta.component').then(m => m.ListaRutasFormComponent)
       },
       {
         path: 'solicitudes-facturas/nuevo',
@@ -68,7 +68,12 @@ const routes: Routes = [
       {
         path: 'tablero-clientes',
         loadComponent: () => import('./pages/tablero-clientes/tablero-clientes.component').then(m => m.TableroClientesComponent)
-      }
+      },
+
+      {
+        path: 'ventas-problemas',
+        loadComponent: () => import('./pages/ventas-problemas/ventas-problemas.component').then(m => m.VentasProblemasComponent)
+      },
 
     ]
   },

@@ -78,38 +78,17 @@ export const NavigationItems: NavigationItem[] = [
         url: '/tablero-clientes',
         icon: 'ti ti-users',
         breadcrumbs: false
+      },
+
+      {
+        id: 'ventas-problemas',
+        title: 'Ventas con Problemas',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/ventas-problemas',
+        icon: 'ti ti-alert-triangle',
+        breadcrumbs: false
       }
-
-      /*
-      {
-        id: '',
-        title: 'Órdenes Compra',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/ordenes-venta',
-        icon: 'ti ti-receipt',
-        breadcrumbs: false
-      },
-
-      {
-        id: '',
-        title: 'Tablero de Producción',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/tablero-produccion',
-        icon: 'ti ti-shirt',
-        breadcrumbs: false
-      },
-
-      {
-        id: '',
-        title: 'Turnos',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/tablero-produccion',
-        icon: 'ti ti-cash',
-        breadcrumbs: false
-      }*/
     ]
   }
 ];

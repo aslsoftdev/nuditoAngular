@@ -31,8 +31,8 @@ export interface Ruta {
   total_pagos_creditos_transferencias: number;
 
   // Campos JSON que pueden llegar como objeto o string
-  json_dinero_entregado: DineroEntregado | string;
-  json_existencias: Existencia[] | string;
+  dinero_entregado: DineroEntregado;
+  existencias: Existencia[];
 
   // Relaciones
   detalles: DetalleRuta[];
@@ -61,6 +61,7 @@ export interface DetalleRuta {
   id_detalle_ruta: number;
   ruta: number;
   producto: number;
+  imagen_url: string;
   existencia_inicial: number;
   ventas: number;
   devoluciones: number;
@@ -75,11 +76,19 @@ export interface DetalleRuta {
 export interface Visita {
   id_visita: number;
   cliente: number;
+  vendedor: number;
   clasificacion_visita: number;
   fecha_registro: string;
   fecha_cancelacion?: string | null;
   nombre_cliente: string;
   nombre_clasificacion: string;
+  telefono: string;
+  calle: string;
+  ciudad: string;
+  color: string;
+  latitud: number;
+  longitud: number;
+  total_pagos_creditos: number;
   ventas: Venta[];
 }
 

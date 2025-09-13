@@ -14,13 +14,44 @@
             </div>
           </div>
 
-          <!-- Buscador -->
-          <div class="col-md-4">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="busqueda"
-                (keyup.enter)="onBuscar()" />
-              <button class="btn btn-outline-secondary" type="button" (click)="onBuscar()">
-                <i class="ti ti-search"></i>
+
+          <!-- Filtros -->
+          <!-- Filtros -->
+          <div class="row mb-3">
+            <!-- Agente -->
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="filtros.agente" (change)="obtenerRutas()">
+                <option value="">Todos los vendedores</option>
+                <option *ngFor="let a of vendedores" [value]="a.id_usuario">
+                  {{ a.nombre_usuario }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Estado actual -->
+            <div class="col-md-3">
+              <select class="form-select" [(ngModel)]="filtros.estado" (change)="obtenerRutas()">
+                <option value="%">Todos los estados</option>
+                <option value="proceso">En Proceso</option>
+                <option value="terminada">Terminada</option>
+                <option value="cerrada">Cerrada</option>
+              </select>
+            </div>
+
+            <!-- Fecha inicio -->
+            <div class="col-md-2">
+              <input type="date" class="form-control" [(ngModel)]="filtros.fechaInicio" (change)="obtenerRutas()" />
+            </div>
+
+            <!-- Fecha fin -->
+            <div class="col-md-2">
+              <input type="date" class="form-control" [(ngModel)]="filtros.fechaFin" (change)="obtenerRutas()" />
+            </div>
+
+            <!-- Botón buscar -->
+            <div class="col-md-2 text-end">
+              <button class="btn btn-outline-primary w-100" (click)="obtenerRutas()">
+                <i class="ti ti-search"></i> Buscar
               </button>
             </div>
           </div>
@@ -85,17 +116,27 @@
                     <a class="btn btn-link-primary" title="Editar" [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
                       <i class="ti ti-pencil"></i>
                     </a>
-                    <a class="btn btn-link-danger" title="Desbloquear">
-                      <i class="ti ti-lock-open"></i>
+                    <a class="btn btn-link-warning" title="Regresar a En Proceso" (click)="regresarEnProceso(u)">
+                      <i class="ti ti-arrow-back-up"></i>
                     </a>
                   </ng-container>
 
-                  <!-- En Proceso → lápiz -->
+                  <!-- En Proceso → ver detalle + terminar + archivar -->
                   <ng-container *ngIf="u.estado_actual === 'En Proceso'">
-                    <a class="btn btn-link-primary" title="Editar" [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
-                      <i class="ti ti-pencil"></i>
+                    <a class="btn btn-link-primary" title="Ver detalle"
+                      [routerLink]="['/lista-rutas/editar/', u.id_ruta]">
+                      <i class="ti ti-eye"></i>
                     </a>
+
+                    <button class="btn btn-link-success" title="Terminar ruta" (click)="terminarRuta(u)">
+                      <i class="ti ti-check"></i>
+                    </button>
+
+                    <button class="btn btn-link-danger" title="Archivar ruta" (click)="archivarRuta(u)">
+                      <i class="ti ti-archive"></i>
+                    </button>
                   </ng-container>
+
                 </td>
               </tr>
 
