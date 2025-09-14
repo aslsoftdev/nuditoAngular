@@ -20,7 +20,8 @@ export const API_ENDPOINTS = {
   terminarRuta: `${API_BASE_URL}/api.terminar_ruta.php`,
   archivarRuta: `${API_BASE_URL}/api.archivar_ruta.php`,
   cancelarVisita: `${API_BASE_URL}/api.cancelar_visita.php`,
-  
+  cambiarVisita: `${API_BASE_URL}/api.cambiar_visita.php`,
+
   obtenerSolicitudFactura: `${API_BASE_URL}/api.obtener_solicitud_factura.php`,
   obtenerComentariosFactura: `${API_BASE_URL}/api.obtener_informacion_factura.php`,
   actualizarSolicitudFactura: `${API_BASE_URL}/api.actualizar_solicitud_factura.php`,

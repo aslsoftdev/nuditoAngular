@@ -545,6 +545,18 @@
            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
          </div>
          <div class="modal-body">
+
+           <!-- Cliente de la venta -->
+           <div class="mb-3">
+             <label for="clienteVenta" class="form-label fw-bold">Cliente</label>
+             <select id="clienteVenta" class="form-select" [(ngModel)]="ventaSeleccionada.cliente">
+               <option [ngValue]="null">Seleccione un cliente</option>
+               <option *ngFor="let c of clientes" [ngValue]="c.id_cliente">
+                 {{ c.nombre_cliente }}
+               </option>
+             </select>
+           </div>
+
            <div *ngIf="ventaSeleccionada?.detalles?.length > 0; else sinDetalles">
              <table class="table align-middle table-bordered rounded-3 overflow-hidden">
                <thead class="bg-light">

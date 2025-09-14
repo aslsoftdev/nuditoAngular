@@ -13,6 +13,7 @@ import { RutaPorid, Ruta, Visita } from 'src/app/core/models/ruta-por-id.model';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { Clientes, ConsultarClientesResponse } from 'src/app/core/models/clientes.model';
 
 declare var bootstrap: any;
 
@@ -50,9 +51,10 @@ export class ListaRutasFormComponent implements OnInit {
   visitaSeleccionada: any = null;
   mapaUrl: SafeResourceUrl | null = null;
   usuarioId = +(localStorage.getItem('id_usuario') || '0');
-  ventaSeleccionada: any = null;
-  ventaBackup: any = null; // 👈 copia para cancelar
+  ventaSeleccionada: any = { cliente: null, detalles: [] };
+  ventaBackup: any = { cliente: null, detalles: [] };
   productosInventarioCliente: any[] = [];       // inventario filtrado por cliente
+  clientes: Clientes[] = [];
 
   filtros = {
     cliente: '',
@@ -73,6 +75,7 @@ export class ListaRutasFormComponent implements OnInit {
       const id = params.get('id');
       if (id) {
         this.esEdicion = true;
+        this.cargarClientes();
         this.cargarRuta(+id);
         this.cargarClasificaciones();
       }
@@ -148,6 +151,7 @@ export class ListaRutasFormComponent implements OnInit {
           if (this.ruta.estado_actual !== 'Cerrada') {
             this.cargarInventario(this.ruta.usuario);
           }
+
         } else {
           Swal.fire('Error', response.message || 'Error al cargar la ruta', 'error');
         }
@@ -159,6 +163,20 @@ export class ListaRutasFormComponent implements OnInit {
     });
   }
 
+  private cargarClientes(): void {
+    this.http.get<ConsultarClientesResponse>(API_ENDPOINTS.obtenerClientes).subscribe({
+      next: (resp) => {
+        if (resp.status) {
+          this.clientes = resp.clientes;
+        } else {
+          Swal.fire('Aviso', resp.mensaje || 'No se encontraron clientes', 'info');
+        }
+      },
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los clientes', 'error');
+      }
+    });
+  }
   calcularTotal(visita: Visita): number {
     if (!visita.ventas) return 0;
     return visita.ventas.reduce((s, v) => s + (v.total || 0), 0);
@@ -412,10 +430,42 @@ export class ListaRutasFormComponent implements OnInit {
   }
 
   guardarCambios(): void {
-    // Aquí podrías llamar API para guardar
-    console.log("Venta guardada", this.ventaSeleccionada);
-  }
+    if (!this.ventaSeleccionada) return;
 
+    const payload = {
+      id_visita: this.ventaSeleccionada.visita,      // id de la visita
+      id_cliente: this.ventaSeleccionada.cliente,    // cliente seleccionado
+      venta: {
+        id_venta: this.ventaSeleccionada.id_venta,
+        subtotal: this.ventaSeleccionada.subtotal || 0,
+        iva: this.ventaSeleccionada.iva || 0,
+        ieps: this.ventaSeleccionada.ieps || 0,
+        total_transferencia: this.ventaSeleccionada.total_transferencia || 0,
+        total_tarjeta: this.ventaSeleccionada.total_tarjeta || 0,
+        total_efectivo: this.ventaSeleccionada.total_efectivo || 0,
+        total_credito: this.ventaSeleccionada.total_credito || 0,
+        cambio: this.ventaSeleccionada.cambio || 0,
+        total: this.granTotal,
+        moneda: 'MXN',
+        detalles: this.ventaSeleccionada.detalles
+      },
+      pagos: this.ventaSeleccionada.pagos || []
+    };
+
+    this.http.post(API_ENDPOINTS.cambiarVisita, payload).subscribe({
+      next: (resp: any) => {
+        if (resp.status) {
+          Swal.fire('Éxito', 'Venta actualizada con éxito', 'success');
+          this.cargarRuta(this.ruta.id_ruta); // refrescar ruta
+        } else {
+          Swal.fire('Error', resp.message || 'No se pudo actualizar la venta', 'error');
+        }
+      },
+      error: () => {
+        Swal.fire('Error', 'No se pudo actualizar la venta', 'error');
+      }
+    });
+  }
 
   onProductoChange(detalle: any): void {
     const prod = this.productosInventarioCliente.find(
