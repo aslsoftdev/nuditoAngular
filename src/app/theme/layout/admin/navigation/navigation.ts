@@ -82,7 +82,7 @@ export const NavigationItems: NavigationItem[] = [
 
       {
         id: 'ventas-problemas',
-        title: 'Ventas con Problemas',
+        title: 'Ventas sin Subir',
         type: 'item',
         classes: 'nav-item',
         url: '/ventas-problemas',
