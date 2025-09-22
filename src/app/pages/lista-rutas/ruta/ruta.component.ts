@@ -44,6 +44,7 @@ export class FiltroVisitasPipe implements PipeTransform {
 export class ListaRutasFormComponent implements OnInit {
   esEdicion = false;
   cargando = false;
+  usuarioRuta = 0;
   ruta?: Ruta;
   busqueda: string = '';
   clasificaciones: any[] = [];
@@ -102,8 +103,8 @@ export class ListaRutasFormComponent implements OnInit {
     });
   }
 
-  private cargarInventario(idUsuario: number): void {
-    this.http.get<any>(`${API_ENDPOINTS.obtenerProductos}?id_usuario=${idUsuario}`).subscribe({
+  private cargarInventario(): void {
+    this.http.get<any>(`${API_ENDPOINTS.obtenerProductos}?id_usuario=${this.usuarioRuta}`).subscribe({
       next: (resp) => {
         if (resp.status) {
           this.productosInventario = resp.productos
@@ -132,6 +133,8 @@ export class ListaRutasFormComponent implements OnInit {
         this.cargando = false;
         if (response.status) {
           this.ruta = response.ruta as unknown as Ruta;
+
+          this.usuarioRuta = this.ruta.usuario;
           this.ruta.dinero_entregado = this.ruta.dinero_entregado || {
             total_efectivo: 0,
             total_transferencias: 0,
@@ -149,7 +152,7 @@ export class ListaRutasFormComponent implements OnInit {
           
           // 👉 si la ruta no está cerrada, obtener inventario
           if (this.ruta.estado_actual !== 'Cerrada') {
-            this.cargarInventario(this.ruta.usuario);
+            this.cargarInventario();
           }
 
         } else {
@@ -404,10 +407,9 @@ export class ListaRutasFormComponent implements OnInit {
   }
 
   private cargarInventarioConCliente(idCliente: number) {
-    console.log(`${API_ENDPOINTS.obtenerProductos}?id_usuario=${this.usuarioId}&id_cliente=${idCliente}`);
     
     return this.http
-      .get<any>(`${API_ENDPOINTS.obtenerProductos}?id_usuario=${this.usuarioId}&id_cliente=${idCliente}`)
+      .get<any>(`${API_ENDPOINTS.obtenerProductos}?id_usuario=${this.usuarioRuta}&id_cliente=${idCliente}`)
       .subscribe({
         next: (resp) => {
            if (resp.status) {
