@@ -27,7 +27,9 @@
        <div class="card shadow-sm border-0 p-4 bg-success text-white rounded-3">
          <i class="ti ti-users fs-1 mb-2"></i>
          <h6 class="mb-1">Clientes Visitados</h6>
-         <h4 class="fw-bold">0/0</h4>
+         <h4 class="fw-bold">
+           {{ ruta.clientes_visitados }}/{{ ruta.clientes_planeados }}
+         </h4>
        </div>
      </div>
 
@@ -35,7 +37,7 @@
        <div class="card shadow-sm border-0 p-4 bg-danger text-white rounded-3">
          <i class="ti ti-door-exit fs-1 mb-2"></i>
          <h6 class="mb-1">Clientes Cerrados</h6>
-         <h4 class="fw-bold">0</h4>
+         <h4 class="fw-bold">{{ ruta.clientes_cerrados }}</h4>
        </div>
      </div>
    </div>
@@ -356,6 +358,7 @@
                <thead class="table-light">
                  <tr>
                    <th>#</th>
+                   <th>Acciones</th>
                    <th>Cliente</th>
                    <th>Clasificación</th>
                    <th>Fecha</th>
@@ -363,12 +366,28 @@
                    <th>Método</th>
                    <th>Pagos Créd.</th>
                    <th>Ubicación</th>
-                   <th>Acciones</th>
                  </tr>
                </thead>
                <tbody>
                  <tr *ngFor="let v of visitasFiltradas">
+                   <!-- ID -->
                    <td>{{ v.id_visita }}</td>
+
+                   <!-- Acciones -->
+                   <td>
+                     <ng-container *ngIf="v.id_visita">
+                       <button class="btn btn-sm btn-outline-danger me-1" (click)="cancelarVisita(v)"
+                         title="Cancelar visita">
+                         <i class="ti ti-x"></i>
+                       </button>
+
+                       <button class="btn btn-sm btn-outline-primary" (click)="verVenta(v)" title="Ver venta">
+                         <i class="ti ti-eye"></i>
+                       </button>
+                     </ng-container>
+                   </td>
+
+                   <!-- Cliente -->
                    <td class="fw-semibold">
                      {{ v.nombre_cliente }}
                      <div class="mt-1 text-muted small">
@@ -388,44 +407,50 @@
                      </div>
                    </td>
 
+                   <!-- Clasificación -->
                    <td>
                      <span class="badge fw-semibold" [ngStyle]="{
-            'background-color': v.color,
-            'color': '#fff',
-            'border-radius': '12px',
-            'padding': '2px 8px',
-            'font-size': '0.75rem',
-            'box-shadow': '0 1px 3px rgba(0,0,0,0.15)'
-          }">
+              'background-color': v.color,
+              'color': '#fff',
+              'border-radius': '12px',
+              'padding': '2px 8px',
+              'font-size': '0.75rem',
+              'box-shadow': '0 1px 3px rgba(0,0,0,0.15)'
+            }">
                        {{ v.nombre_clasificacion }}
                      </span>
                    </td>
 
+                   <!-- Fecha -->
                    <td>{{ v.fecha_registro | date:'short' }}</td>
 
+                   <!-- Venta -->
                    <td class="fw-bold text-primary">
                      {{ v.ventas[0]?.total | currency:'MXN':'symbol':'1.0-0' }}
                    </td>
 
+                   <!-- Método -->
                    <td>
                      <span *ngIf="v.ventas[0]?.pagos[0]?.metodo_pago" class="badge fw-semibold" [ngStyle]="{
-            'background-color': v.ventas[0]?.pagos[0]?.metodo_pago === 'Efectivo' ? '#28a745' : 
-                                v.ventas[0]?.pagos[0]?.metodo_pago === 'Crédito' ? '#ba0006' : 
-                                v.ventas[0]?.pagos[0]?.metodo_pago === 'Transferencia' ? '#0d6efd' : '#6c757d',
-            'color': '#fff',
-            'border-radius': '12px',
-            'padding': '2px 8px',
-            'font-size': '0.75rem',
-            'box-shadow': '0 1px 3px rgba(0,0,0,0.15)'
-          }">
+              'background-color': v.ventas[0]?.pagos[0]?.metodo_pago === 'Efectivo' ? '#28a745' : 
+                                  v.ventas[0]?.pagos[0]?.metodo_pago === 'Crédito' ? '#ba0006' : 
+                                  v.ventas[0]?.pagos[0]?.metodo_pago === 'Transferencia' ? '#0d6efd' : '#6c757d',
+              'color': '#fff',
+              'border-radius': '12px',
+              'padding': '2px 8px',
+              'font-size': '0.75rem',
+              'box-shadow': '0 1px 3px rgba(0,0,0,0.15)'
+            }">
                        {{ v.ventas[0]?.pagos[0]?.metodo_pago }}
                      </span>
                    </td>
 
+                   <!-- Pagos Créditos -->
                    <td class="fw-bold text-danger">
                      {{ v.total_pagos_creditos | currency:'MXN':'symbol':'1.0-0' }}
                    </td>
 
+                   <!-- Ubicación -->
                    <td>
                      <ng-container
                        *ngIf="v.latitud && v.longitud && v.latitud !== 0 && v.longitud !== 0; else sinUbicacion">
@@ -437,27 +462,12 @@
                        <span class="text-muted">-</span>
                      </ng-template>
                    </td>
-
-
-                   <td>
-                     <ng-container *ngIf="v.id_visita">
-                       <button class="btn btn-sm btn-outline-danger" (click)="cancelarVisita(v)"
-                         title="Cancelar visita">
-                         <i class="ti ti-x"></i>
-                       </button>
-
-                       <button class="btn btn-sm btn-outline-primary" (click)="verVenta(v)" title="Ver venta">
-                         <i class="ti ti-shopping-cart"></i>
-                       </button>
-                     </ng-container>
-                   </td>
-
                  </tr>
                </tbody>
 
                <tfoot class="table-light">
                  <tr>
-                   <td colspan="4" class="text-end fw-bold">Total:</td>
+                   <td colspan="5" class="text-end fw-bold">Total:</td>
                    <td class="fw-bold text-primary">
                      {{ totalVentasFiltradas | currency:'MXN':'symbol':'1.0-0' }}
                    </td>
@@ -465,7 +475,6 @@
                    <td class="fw-bold text-danger">
                      {{ totalPagosCreditos | currency:'MXN':'symbol':'1.0-0' }}
                    </td>
-                   <td></td>
                    <td></td>
                  </tr>
                </tfoot>

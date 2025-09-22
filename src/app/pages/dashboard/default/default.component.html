@@ -1,126 +1,122 @@
-<div class="row">
-  <!-- <div class="col-xl-4 col-md-6">
-    <div class="card earning-card bg-secondary-dark text-white overflow-hidden">
-      <span class="round secondary-round small"></span>
-      <span class="round secondary-round big"></span>
-      <div class="card-body">
-        <div class="row">
-          <div class="col">
-            <div class="avatar avatar-lg">
-              <i class="text-white ti ti-credit-card f-24"></i>
-            </div>
-          </div>
-          <div class="col-auto">
-            <div class="btn-group" ngbDropdown>
-              <a type="button" class="avatar avatar-xs bg-secondary dropdown-toggle arrow-none" ngbDropdownToggle>
-                <i class="ti ti-dots"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                <li><button class="dropdown-item" type="button">Import Card</button></li>
-                <li><button class="dropdown-item" type="button">Export</button></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <span class="text-white d-block f-34 f-w-500 my-2">
-          $500.00
-          <i class="ti ti-circle-arrow-up-right opacity-50"></i>
-        </span>
-        <p class="mb-0 opacity-50">Total Earning</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-xl-4 col-md-6">
-    <div class="card earning-card bg-primary-dark text-white overflow-hidden">
-      <span class="round primary-round small"></span>
-      <span class="round primary-round big"></span>
-      <div class="card-body">
-        <app-chart-data-month />
-      </div>
-    </div>
-  </div>
-  <div class="col-xl-4 col-md-12">
-    <div class="card total-income-card overflow-hidden bg-primary-dark text-white">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div class="avatar avatar-lg icon m-r-5">
-            <i class="text-white ti ti-layout-board-split f-24"></i>
-          </div>
-          <div class="ms-2">
-            <h4 class="text-white f-w-600 mb-1">$203k</h4>
-            <p class="mb-0 opacity-50 text-sm">Total Income</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card total-income-card warning overflow-hidden">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div class="avatar avatar-lg icon-warning m-r-5">
-            <i class="text-warning ti ti-layout-board-split f-24"></i>
-          </div>
-          <div class="ms-2">
-            <h4 class="f-w-600 mb-1">$203k</h4>
-            <p class="mb-0 opacity-50 text-sm">Total Income</p>
-          </div>
-        </div>
-      </div>
+<!-- Shimmer loader -->
+<div *ngIf="loading" class="row g-3">
+
+  <!-- Resumen Total (Grande) -->
+  <div class="col-12 mt-3">
+    <div class="card shadow-sm border-0 p-5 rounded-3 text-center placeholder-wave">
+      <div class="placeholder bg-secondary col-3 mb-3 rounded mx-auto"></div>
+      <div class="placeholder bg-secondary col-6 rounded fw-bold mx-auto" style="height: 40px;"></div>
     </div>
   </div>
 
-  <div class="col-xl-8 col-md-12">
-    <app-bar-chart />
-  </div>
-  <div class="col-xl-4 col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <div class="row mb-3 align-items-center">
-          <div class="col">
-            <h4>Popular Stocks</h4>
-          </div>
-          <div class="col-auto"></div>
-        </div>
-        <div class="rounded bg-light-secondary overflow-hidden mb-3">
-          <div class="px-3 pt-3">
-            <div class="row mb-1 align-items-start">
-              <div class="col">
-                <h5 class="text-secondary mb-0">Bajaj Finery</h5>
-                <small class="text-muted">10% Profit</small>
-              </div>
-              <div class="col-auto">
-                <h4 class="mb-0">$1839.00</h4>
-              </div>
-            </div>
-          </div>
-          <app-bajaj-chart />
-        </div>
-        <ul class="list-group list-group-flush">
-          @for (list of ListGroup; track list) {
-            <li class="list-group-item px-0 {{ list.space }}">
-              <div class="row align-items-start">
-                <div class="col">
-                  <h5 class="mb-0">{{ list.name }}</h5>
-                  <small class="{{ list.color }}">{{ list.profit }}</small>
-                </div>
-                <div class="col-auto">
-                  <h4 class="mb-0">
-                    {{ list.invest }}
-                    <span class="ms-2 align-top avatar avatar-xxs {{ list.bgColor }}">
-                      <i class="{{ list.icon }} {{ list.color }}"></i>
-                    </span>
-                  </h4>
-                </div>
-              </div>
-            </li>
-          }
-        </ul>
-        <div class="text-center">
-          <a href="javascript:" class="b-b-primary text-primary f-w-500">
-            View all
-            <i class="ti ti-chevron-right"></i>
-          </a>
-        </div>
-      </div>
+  <!-- KPIs Dinero -->
+  <div class="col-xl-4 col-md-6" *ngFor="let i of [1,2,3]">
+    <div class="card shadow-sm border-0 p-4 rounded-3 placeholder-wave">
+      <div class="placeholder bg-secondary col-4 mb-3 rounded"></div>
+      <div class="placeholder bg-secondary col-6 mb-2 rounded"></div>
+      <div class="placeholder bg-secondary col-8 rounded fw-bold"></div>
     </div>
-  </div> -->
+  </div>
+
+  <!-- KPIs Visitas -->
+  <div class="col-xl-3 col-md-6" *ngFor="let i of [1,2,3,4]">
+    <div class="card shadow-sm border-0 p-4 rounded-3 placeholder-wave">
+      <div class="placeholder bg-secondary col-4 mb-3 rounded"></div>
+      <div class="placeholder bg-secondary col-6 mb-2 rounded"></div>
+      <div class="placeholder bg-secondary col-8 rounded fw-bold"></div>
+    </div>
+  </div>
+
 </div>
+
+
+<!-- Resumen Total -->
+<div class="row g-3 mt-3" *ngIf="kpis && !loading">
+  <div class="col-12">
+    <div class="card bg-dark text-white shadow-sm border-0 p-4 rounded-3 text-center">
+      <h6 class="mb-1">Total del Día ({{ fecha }})</h6>
+      <h2 class="fw-bold text-warning">
+        {{
+          (kpis.total_efectivo + kpis.total_transferencias + kpis.total_credito)
+            | currency:'MXN':'symbol':'1.0-0'
+        }}
+      </h2>
+    </div>
+  </div>
+</div>
+
+<!-- KPIs Dinero -->
+<div class="row g-3" *ngIf="kpis && !loading">
+  <!-- Total Efectivo -->
+  <div class="col-xl-4 col-md-6">
+    <div class="card bg-light shadow-sm border-0 p-4 rounded-3">
+      <i class="ti ti-cash fs-1 text-success mb-2"></i>
+      <h6 class="mb-1">Efectivo</h6>
+      <h4 class="fw-bold text-success">
+        {{ kpis.total_efectivo | currency:'MXN':'symbol':'1.0-0' }}
+      </h4>
+    </div>
+  </div>
+
+  <!-- Total Transferencias -->
+  <div class="col-xl-4 col-md-6">
+    <div class="card bg-light shadow-sm border-0 p-4 rounded-3">
+      <i class="ti ti-building-bank fs-1 text-primary mb-2"></i>
+      <h6 class="mb-1">Transferencias</h6>
+      <h4 class="fw-bold text-primary">
+        {{ kpis.total_transferencias | currency:'MXN':'symbol':'1.0-0' }}
+      </h4>
+    </div>
+  </div>
+
+  <!-- Total Crédito -->
+  <div class="col-xl-4 col-md-6">
+    <div class="card bg-light shadow-sm border-0 p-4 rounded-3">
+      <i class="ti ti-credit-card fs-1 text-danger mb-2"></i>
+      <h6 class="mb-1">Crédito</h6>
+      <h4 class="fw-bold text-danger">
+        {{ kpis.total_credito | currency:'MXN':'symbol':'1.0-0' }}
+      </h4>
+    </div>
+  </div>
+</div>
+
+<!-- KPIs Visitas -->
+<div class="row g-3 mt-3" *ngIf="kpis && !loading">
+  <!-- Clientes Planeados -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card bg-primary text-white shadow-sm border-0 p-4 rounded-3">
+      <i class="ti ti-users fs-1 mb-2"></i>
+      <h6 class="mb-1">Planeados</h6>
+      <h4 class="fw-bold">{{ kpis.clientes_planeados }}</h4>
+    </div>
+  </div>
+
+  <!-- Clientes Visitados -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card bg-success text-white shadow-sm border-0 p-4 rounded-3">
+      <i class="ti ti-user-check fs-1 mb-2"></i>
+      <h6 class="mb-1">Visitados</h6>
+      <h4 class="fw-bold">{{ kpis.clientes_visitados }}</h4>
+    </div>
+  </div>
+
+  <!-- Clientes Cerrados -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card bg-danger text-white shadow-sm border-0 p-4 rounded-3">
+      <i class="ti ti-door-exit fs-1 mb-2"></i>
+      <h6 class="mb-1">Cerrados</h6>
+      <h4 class="fw-bold">{{ kpis.clientes_cerrados }}</h4>
+    </div>
+  </div>
+
+  <!-- Clientes Faltan -->
+  <div class="col-xl-3 col-md-6">
+    <div class="card bg-warning text-dark shadow-sm border-0 p-4 rounded-3">
+      <i class="ti ti-user-x fs-1 mb-2"></i>
+      <h6 class="mb-1">Faltan</h6>
+      <h4 class="fw-bold">{{ kpis.clientes_faltan }}</h4>
+    </div>
+  </div>
+</div>
+

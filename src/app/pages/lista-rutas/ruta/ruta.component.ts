@@ -388,6 +388,9 @@ export class ListaRutasFormComponent implements OnInit {
       this.ventaBackup = { detalles: [] };
     }
 
+    this.ventaSeleccionada.visita = visita.id_visita || this.ventaSeleccionada.visita?.id_visita || null;
+    this.ventaSeleccionada.cliente = visita.cliente || this.ventaSeleccionada.cliente?.id_cliente || null;
+
     this.cargando = true;
 
     this.cargarInventarioConCliente(this.ventaSeleccionada.cliente).add(() => {
@@ -401,6 +404,8 @@ export class ListaRutasFormComponent implements OnInit {
   }
 
   private cargarInventarioConCliente(idCliente: number) {
+    console.log(`${API_ENDPOINTS.obtenerProductos}?id_usuario=${this.usuarioId}&id_cliente=${idCliente}`);
+    
     return this.http
       .get<any>(`${API_ENDPOINTS.obtenerProductos}?id_usuario=${this.usuarioId}&id_cliente=${idCliente}`)
       .subscribe({
@@ -432,6 +437,7 @@ export class ListaRutasFormComponent implements OnInit {
   guardarCambios(): void {
     if (!this.ventaSeleccionada) return;
 
+    console.log(this.ventaSeleccionada);
     const payload = {
       id_visita: this.ventaSeleccionada.visita,      // id de la visita
       id_cliente: this.ventaSeleccionada.cliente,    // cliente seleccionado

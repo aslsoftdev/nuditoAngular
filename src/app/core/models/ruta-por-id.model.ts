@@ -37,6 +37,10 @@ export interface Ruta {
   // Relaciones
   detalles: DetalleRuta[];
   visitas: Visita[];
+
+  clientes_visitados: number;
+  clientes_planeados: number;
+  clientes_cerrados: number;
 }
 
 export interface DineroEntregado {
