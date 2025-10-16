@@ -51,7 +51,14 @@ export class SolicituesFacturasFormComponent implements OnInit {
 
  private cargarFactura(id: number): void {
     this.cargando = true;
-    this.http.get<SolicitudFactureResponse>(`${API_ENDPOINTS.obtenerComentariosFactura}?id_factura=${id}`, {}).subscribe({
+    
+    const payload = {
+      case: 'obtener_solicitud_factura',
+      id_solicitud: id
+    };
+
+
+    this.http.post<SolicitudFactureResponse>(`${API_ENDPOINTS.solicitudesFactura}`, payload).subscribe({
       next: (response) => {
         this.cargando = false;
         if (response.status) {
@@ -74,12 +81,13 @@ export class SolicituesFacturasFormComponent implements OnInit {
     if(!this.factura) return;
 
     const payload = {
+      case: 'actualizar_solicitud_factura',
       id_solicitud: this.id_factura,
       facturada: this.factura.facturada,
       comentarios: this.factura.comentarios
     };
 
-    this.http.post(API_ENDPOINTS.actualizarSolicitudFactura, payload).subscribe({
+    this.http.post(API_ENDPOINTS.solicitudesFactura, payload).subscribe({
       next: () => {
         Swal.fire('Exito', 'Factura actualizada correctamente', 'success');
         this.router.navigate(['/solicitudes-facturas']);

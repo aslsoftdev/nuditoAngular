@@ -11,11 +11,7 @@
           <!-- Switch Activos / Archivados -->
           <div class="col-md-4">
             <div class="form-check form-switch ms-1">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="switchSoloActivos"
-                [(ngModel)]="soloActivos"
+              <input class="form-check-input" type="checkbox" id="switchSoloActivos" [(ngModel)]="soloActivos"
                 (change)="obtenerVendedores()" />
               <label class="form-check-label" for="switchSoloActivos">
                 {{ soloActivos
@@ -28,11 +24,7 @@
           <!-- Buscador -->
           <div class="col-md-4">
             <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Buscar por nombre..."
-                [(ngModel)]="busqueda"
+              <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="busqueda"
                 (keyup.enter)="onBuscar()" />
               <button class="btn btn-outline-secondary" type="button" (click)="onBuscar()">
                 <i class="ti ti-search"></i>
@@ -71,14 +63,11 @@
                 <td>{{ u.nombre_diario || '-' }}</td>
                 <td>{{ u.nombre_cliente || '-' }}</td>
                 <td class="text-center">
-                  <a class="btn btn-link-primary"
-                     title="Editar"
-                     [routerLink]="['/usuarios/editar/', u.id_usuario]">
+                  <a class="btn btn-link-primary" title="Editar" [routerLink]="['/usuarios/editar/', u.id_usuario]">
                     <i class="ti ti-pencil"></i>
                   </a>
-                  <button class="btn btn-link-danger"
-                          (click)="cambiarEstado(u)"
-                          [title]="u.estado_actual === 2 ? 'Archivar' : 'Activar'">
+                  <button class="btn btn-link-danger" (click)="cambiarEstado(u)"
+                    [title]="u.estado_actual === 2 ? 'Archivar' : 'Activar'">
                     <i [class]="u.estado_actual === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
                   </button>
                 </td>

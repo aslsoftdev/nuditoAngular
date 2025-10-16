@@ -14,4 +14,5 @@ export interface SolicitudFactura{
     total: number;
     id_odoo: number;
     nombre_cliente: string;
+    estado_actual: number;
 }

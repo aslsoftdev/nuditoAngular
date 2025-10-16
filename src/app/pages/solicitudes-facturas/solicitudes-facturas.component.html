@@ -14,16 +14,6 @@
             </div>
           </div>
 
-          <!-- Buscador -->
-          <div class="col-md-4">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Buscar por nombre..." [(ngModel)]="busqueda"
-                (keyup.enter)="onBuscar()" />
-              <button class="btn btn-outline-secondary" type="button" (click)="onBuscar()">
-                <i class="ti ti-search"></i>
-              </button>
-            </div>
-          </div>
         </div>
 
         <!-- SHIMMER -->
@@ -65,8 +55,8 @@
                     <i class="ti ti-pencil"></i>
                   </a>
                   <button class="btn btn-link-danger" (click)="cambiarEstado(u)"
-                    [title]="u.activa === 2 ? 'Archivar' : 'Activar'">
-                    <i [class]="u.activa === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
+                    [title]="u.estado_actual === 2 ? 'Archivar' : 'Activar'">
+                    <i [class]="u.estado_actual === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
                   </button>
                 </td>
                 <td class="text-center">

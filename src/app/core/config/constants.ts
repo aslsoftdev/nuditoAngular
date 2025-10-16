@@ -22,9 +22,11 @@ export const API_ENDPOINTS = {
   cancelarVisita: `${API_BASE_URL}/api.cancelar_visita.php`,
   cambiarVisita: `${API_BASE_URL}/api.cambiar_visita.php`,
 
-  obtenerSolicitudFactura: `${API_BASE_URL}/api.obtener_solicitud_factura.php`,
-  obtenerComentariosFactura: `${API_BASE_URL}/api.obtener_informacion_factura.php`,
-  actualizarSolicitudFactura: `${API_BASE_URL}/api.actualizar_solicitud_factura.php`,
+  solicitudesFactura: `${API_BASE_URL}/api.solicitudes_factura.php`,
+
+  //obtenerSolicitudFactura: `${API_BASE_URL}/api.obtener_solicitudes_factura.php`,
+  //obtenerComentariosFactura: `${API_BASE_URL}/api.obtener_informacion_factura.php`,
+  //actualizarSolicitudFactura: `${API_BASE_URL}/api.actualizar_solicitud_factura.php`,
 
   obtenerTableroClientes: `${API_BASE_URL}/api.obtener_tablero_clientes.php`,
   actualizarTableroCliente: `${API_BASE_URL}/api.actualizar_tablero_cliente.php`,
